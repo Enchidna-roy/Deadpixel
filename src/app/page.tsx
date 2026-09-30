@@ -8,18 +8,25 @@ import { useEffect, useRef, useState } from "react";
    Swap any image below with your own, e.g. "/photos/portraits/01.jpg"
    (put files in /public/photos). Uses plain <img> so no next.config
    changes are needed for remote placeholders.
+
+   THEME: dark / light mode lewat CSS variable (lihat blok .dp di <style>).
+   Semua warna tema dipakai sebagai rgb(var(--nama)) supaya bisa diberi
+   opacity, mis. bg-[rgb(var(--bg)/0.9)]. Ubah palet di satu tempat saja.
 ------------------------------------------------------------------- */
 
 const img = (seed: string, w = 1200, h = 800) =>
   `https://picsum.photos/seed/${seed}/${w}/${h}`;
 
-// Placeholder set of n photos for a gallery (varied heights for the masonry look).
+// Placeholder set of n photos for a gallery (varied heights for the collage look).
 const set = (seed: string, n: number) =>
-  Array.from({ length: n }, (_, i) => img(`${seed}-${i + 1}`, 900, i % 3 === 0 ? 1200 : 900));
+  Array.from({ length: n }, (_, i) =>
+    img(`${seed}-${i + 1}`, 900, i % 3 === 0 ? 1200 : 900),
+  );
 
 const NAV = [
   { label: "HOME", id: "home" },
   { label: "ABOUT", id: "about" },
+  { label: "GEAR", id: "gear" },
   { label: "GALLERIES", id: "galleries" },
   { label: "SELECTED WORKS", id: "works" },
   { label: "CONTACT", id: "contact" },
@@ -28,7 +35,10 @@ const NAV = [
 const SLIDES = [
   { src: img("deadpixel-hero-1", 2000, 1200), caption: "Neon rain, Magelang" },
   { src: img("deadpixel-hero-2", 2000, 1200), caption: "Golden hour portrait" },
-  { src: img("deadpixel-hero-3", 2000, 1200), caption: "Volcanic ridge at dawn" },
+  {
+    src: img("deadpixel-hero-3", 2000, 1200),
+    caption: "Volcanic ridge at dawn",
+  },
   { src: img("deadpixel-hero-4", 2000, 1200), caption: "Concrete geometry" },
 ];
 
@@ -38,33 +48,91 @@ const HIGHLIGHTS = [
   { title: "Landscape & Nature", text: "Quiet horizons and raw terrain." },
 ];
 
+const GEAR = [
+  {
+    name: "Sony a6700",
+    image: "/images/Gear/sony-a6700.jpg",
+  },
+  {
+    name: "Tamron 17-70mm",
+    image: "/images/Gear/tamron-17-70.jpg",
+  },
+  {
+    name: "Sony 50mm F1.4",
+    image: "/images/Gear/sony-50mm.jpg",
+  },
+  {
+    name: "Takara Rover 77",
+    image: "/images/Gear/takara-rover-77.jpg",
+  },
+  {
+    name: "Godox TT600",
+    image: "/images/Gear/godox-TT600.jpg",
+  },
+  {
+    name: "Godox VDS-M2",
+    image: "/images/Gear/godox-vds-m2.jpg",
+  },
+];
+
 // Replace the `photos` arrays with your own files, e.g.
 // photos: ["/photos/portraits/01.jpg", "/photos/portraits/02.jpg"]
+//
+// title   -> judul kartu di "Select Gallery"
+// heading -> judul besar di modal (gaya slide PDF)
+// quote   -> kutipan di bawah heading
+// accent  -> warna blok aksen di atas modal
 const GALLERIES = [
   {
     title: "PORTRAITS",
+    heading: "Prita - Bridal Session",
+    quote:
+      "Kumpulan hasil jepretan dari sesi personal branding & bridal photoshoot, menonjolkan detail makeup, kain, dan pencahayaan natural.",
+    accent: "#CFA085",
     count: "10 frames",
     src: "/images/Potraits/01.jpg",
     photos: set("dp-portrait", 10),
   },
   {
     title: "LANDSCAPES",
+    heading: "Visual Stories",
+    quote:
+      "Sebuah kumpulan karya fotografi yang menangkap keindahan alam, momen personal, dan cerita di balik setiap gambar.",
+    accent: "#4E521E",
     count: "36 frames",
     src: "/images/Landscapes/01.jpeg",
     photos: set("dp-landscape", 9),
   },
   {
     title: "Street & Urban",
+    heading: "Street Photography",
+    quote:
+      "Eksplorasi visual jalanan dan pesisir, menangkap kontras cahaya dan momen yang mudah terlewat oleh mata biasa.",
+    accent: "#B0B4BA",
     count: "52 frames",
     src: "/images/Urban/01.jpg",
     photos: set("dp-urban-photo", 9),
   },
   {
     title: "GRADUATION",
+    heading: "A milestone worth remembering",
+    quote:
+      "Hari ini bukan hanya tentang kelulusan, tetapi tentang perjalanan, perjuangan, dan orang-orang yang selalu ada di belakangnya.",
+    accent: "#8A93A0",
     count: "29 frames",
     src: "/images/Graduation/01.jpg",
     photos: set("dp-event", 9),
   },
+];
+
+// Pola ukuran kolase (berulang tiap 6 foto). Ubah sesuka hati.
+const COLLAGE = [
+  "col-span-2 row-span-2",
+  "col-span-1 row-span-1",
+  "col-span-1 row-span-2",
+  "col-span-1 row-span-1",
+  "col-span-2 row-span-1",
+  "col-span-1 row-span-2",
 ];
 
 const WORKS = [
@@ -77,7 +145,10 @@ const WORKS = [
 ];
 
 const SOCIALS = [
-  { label: "Instagram", href: "https://www.instagram.com/deadpixeell?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==" },
+  {
+    label: "Instagram",
+    href: "https://www.instagram.com/deadpixeell?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==",
+  },
   { label: "Behance", href: "https://behance.net" },
   { label: "500px", href: "https://500px.com" },
   { label: "Unsplash", href: "https://unsplash.com" },
@@ -85,9 +156,15 @@ const SOCIALS = [
 ];
 
 const go = (id: string) =>
-  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  document
+    .getElementById(id)
+    ?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+type Theme = "dark" | "light";
+const THEME_KEY = "dp-theme";
 
 export default function Page() {
+  const [theme, setTheme] = useState<Theme>("dark");
   const [slide, setSlide] = useState(0);
   const [menu, setMenu] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -98,6 +175,27 @@ export default function Page() {
   const [lb, setLb] = useState<number | null>(null); // index foto di lightbox
   const touchX = useRef<number | null>(null);
 
+  // Tema: ambil pilihan tersimpan, kalau belum ada ikuti pengaturan sistem
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(THEME_KEY);
+      if (saved === "dark" || saved === "light") {
+        setTheme(saved);
+        return;
+      }
+    } catch {}
+    if (window.matchMedia("(prefers-color-scheme: light)").matches)
+      setTheme("light");
+  }, []);
+
+  const toggleTheme = () => {
+    const next: Theme = theme === "dark" ? "light" : "dark";
+    setTheme(next);
+    try {
+      localStorage.setItem(THEME_KEY, next);
+    } catch {}
+  };
+
   const openG = (i: number, el: HTMLElement) => {
     const r = el.getBoundingClientRect();
     setOrigin({
@@ -105,7 +203,9 @@ export default function Page() {
       y: ((r.top + r.height / 2) / window.innerHeight) * 100,
     });
     setOpenGallery(i);
-    requestAnimationFrame(() => requestAnimationFrame(() => setModalShow(true)));
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => setModalShow(true)),
+    );
   };
 
   const closeG = () => {
@@ -163,15 +263,45 @@ export default function Page() {
   };
 
   const active = openGallery !== null ? GALLERIES[openGallery] : null;
+  const isDark = theme === "dark";
 
   return (
-    <main className="dp min-h-screen bg-[#0A0A0C] text-neutral-300 antialiased">
+    <main
+      data-theme={theme}
+      className="dp min-h-screen bg-[rgb(var(--bg))] text-[rgb(var(--tx))] antialiased transition-colors duration-300"
+    >
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500&family=Montserrat:wght@500;700;800&display=swap');
         html { scroll-behavior: smooth; }
+
+        /* ---- Palet tema (format "R G B" supaya bisa dipakai dengan opacity) ---- */
+        .dp {
+          --bg: 10 10 12;        /* latar utama */
+          --bg2: 18 18 20;       /* latar section selang-seling */
+          --fg: 255 255 255;     /* judul / teks kuat */
+          --tx: 212 212 212;     /* teks isi */
+          --mu: 163 163 163;     /* teks sekunder */
+          --dm: 115 115 115;     /* teks redup */
+          --ac: 168 85 247;      /* aksen ungu */
+          --on: 10 10 12;        /* teks di atas tombol aksen */
+          color-scheme: dark;
+        }
+        .dp[data-theme="light"] {
+          --bg: 244 244 244;
+          --bg2: 233 233 236;
+          --fg: 17 17 17;
+          --tx: 64 64 64;
+          --mu: 82 82 82;
+          --dm: 115 115 115;
+          --ac: 147 51 234;
+          --on: 255 255 255;
+          color-scheme: light;
+        }
+
         .dp { font-family: 'Inter', system-ui, sans-serif; }
         .dp .display { font-family: 'Syne', 'Inter', sans-serif; letter-spacing: -0.02em; }
-        .dp :focus-visible { outline: 2px solid #A855F7; outline-offset: 3px; }
+        .dp .mont { font-family: 'Montserrat', 'Inter', sans-serif; letter-spacing: -0.04em; line-height: .95; }
+        .dp :focus-visible { outline: 2px solid rgb(var(--ac)); outline-offset: 3px; }
         @keyframes dp-in { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
         .dp-in { animation: dp-in .9s cubic-bezier(.2,.7,.2,1) both; }
         @keyframes dp-pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
@@ -191,31 +321,77 @@ export default function Page() {
       {/* NAV */}
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-          scrolled || menu ? "bg-[#0A0A0C]/90 backdrop-blur-md border-b border-white/5" : "bg-transparent"
+          scrolled || menu
+            ? "border-b border-[rgb(var(--fg)/0.08)] bg-[rgb(var(--bg)/0.9)] backdrop-blur-md"
+            : "bg-transparent"
         }`}
       >
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 md:h-20 md:px-8">
-          <button onClick={() => nav("home")} className="display text-xl font-extrabold tracking-[0.2em] text-white">
-            DEAD<span className="text-[#A855F7]">PIXEL</span>
+          <button
+            onClick={() => nav("home")}
+            className="display text-xl font-extrabold tracking-[0.2em] text-[rgb(var(--fg))]"
+          >
+            DEAD<span className="text-[rgb(var(--ac))]">PIXEL</span>
           </button>
 
-          <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
+          <nav
+            className="hidden items-center gap-8 lg:flex"
+            aria-label="Primary"
+          >
             {NAV.map((n) => (
               <button
                 key={n.id}
                 onClick={() => nav(n.id)}
-                className="group relative text-xs font-medium tracking-[0.18em] text-neutral-400 transition-colors hover:text-[#A855F7]"
+                className="group relative text-xs font-medium tracking-[0.18em] text-[rgb(var(--mu))] transition-colors hover:text-[rgb(var(--ac))]"
               >
                 {n.label}
-                <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-[#A855F7] transition-all duration-300 group-hover:w-full" />
+                <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-[rgb(var(--ac))] transition-all duration-300 group-hover:w-full" />
               </button>
             ))}
           </nav>
 
           <div className="flex items-center gap-3">
+            {/* THEME TOGGLE */}
+            <button
+              onClick={toggleTheme}
+              aria-label={
+                isDark ? "Ganti ke mode terang" : "Ganti ke mode gelap"
+              }
+              title={isDark ? "Mode terang" : "Mode gelap"}
+              className="flex h-10 w-10 items-center justify-center rounded-full border border-[rgb(var(--fg)/0.2)] text-[rgb(var(--fg))] transition hover:border-[rgb(var(--ac))] hover:text-[rgb(var(--ac))]"
+            >
+              {isDark ? (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  className="h-5 w-5"
+                  aria-hidden
+                >
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="h-5 w-5"
+                  aria-hidden
+                >
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+                </svg>
+              )}
+            </button>
+
             <button
               onClick={() => nav("contact")}
-              className="hidden rounded-full border border-[#A855F7] px-5 py-2 text-xs font-semibold tracking-[0.16em] text-[#A855F7] transition hover:bg-[#A855F7] hover:text-[#0A0A0C] hover:shadow-[0_0_24px_rgba(168,85,247,.45)] sm:block"
+              className="hidden rounded-full border border-[rgb(var(--ac))] px-5 py-2 text-xs font-semibold tracking-[0.16em] text-[rgb(var(--ac))] transition hover:bg-[rgb(var(--ac))] hover:text-[rgb(var(--on))] hover:shadow-[0_0_24px_rgba(168,85,247,.45)] sm:block"
             >
               GET IN TOUCH
             </button>
@@ -225,27 +401,36 @@ export default function Page() {
               aria-expanded={menu}
               onClick={() => setMenu(!menu)}
             >
-              <span className={`h-px w-6 bg-white transition ${menu ? "translate-y-[7px] rotate-45" : ""}`} />
-              <span className={`h-px w-6 bg-white transition ${menu ? "opacity-0" : ""}`} />
-              <span className={`h-px w-6 bg-white transition ${menu ? "-translate-y-[7px] -rotate-45" : ""}`} />
+              <span
+                className={`h-px w-6 bg-[rgb(var(--fg))] transition ${menu ? "translate-y-[7px] rotate-45" : ""}`}
+              />
+              <span
+                className={`h-px w-6 bg-[rgb(var(--fg))] transition ${menu ? "opacity-0" : ""}`}
+              />
+              <span
+                className={`h-px w-6 bg-[rgb(var(--fg))] transition ${menu ? "-translate-y-[7px] -rotate-45" : ""}`}
+              />
             </button>
           </div>
         </div>
 
         {menu && (
-          <nav className="flex flex-col gap-1 border-t border-white/5 px-5 pb-6 pt-3 lg:hidden" aria-label="Mobile">
+          <nav
+            className="flex flex-col gap-1 border-t border-[rgb(var(--fg)/0.08)] px-5 pb-6 pt-3 lg:hidden"
+            aria-label="Mobile"
+          >
             {NAV.map((n) => (
               <button
                 key={n.id}
                 onClick={() => nav(n.id)}
-                className="py-3 text-left text-sm tracking-[0.18em] text-neutral-300 hover:text-[#A855F7]"
+                className="py-3 text-left text-sm tracking-[0.18em] text-[rgb(var(--tx))] hover:text-[rgb(var(--ac))]"
               >
                 {n.label}
               </button>
             ))}
             <button
               onClick={() => nav("contact")}
-              className="mt-3 rounded-full border border-[#A855F7] py-3 text-xs font-semibold tracking-[0.16em] text-[#A855F7]"
+              className="mt-3 rounded-full border border-[rgb(var(--ac))] py-3 text-xs font-semibold tracking-[0.16em] text-[rgb(var(--ac))]"
             >
               GET IN TOUCH
             </button>
@@ -254,7 +439,10 @@ export default function Page() {
       </header>
 
       {/* HERO */}
-      <section id="home" className="relative flex min-h-screen flex-col justify-end overflow-hidden">
+      <section
+        id="home"
+        className="relative flex min-h-screen flex-col justify-end overflow-hidden"
+      >
         {SLIDES.map((s, i) => (
           <img
             key={s.src}
@@ -265,21 +453,23 @@ export default function Page() {
             }`}
           />
         ))}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/60 to-[#0A0A0C]/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0C]/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[rgb(var(--bg))] via-[rgb(var(--bg)/0.65)] to-[rgb(var(--bg)/0.4)]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[rgb(var(--bg)/0.8)] via-transparent to-transparent" />
 
         <div className="relative mx-auto w-full max-w-7xl px-5 pb-10 pt-40 md:px-8">
           <div className="dp-in max-w-3xl">
-            <h1 className="display text-5xl font-extrabold uppercase leading-[0.95] text-[#A855F7] drop-shadow-[0_0_30px_rgba(168,85,247,.25)] sm:text-7xl lg:text-8xl">
+            <h1 className="display text-5xl font-extrabold uppercase leading-[0.95] text-[rgb(var(--ac))] drop-shadow-[0_0_30px_rgba(168,85,247,.25)] sm:text-7xl lg:text-8xl">
               Deadpixel
-              <span className="block text-white">Visual Arts</span>
+              <span className="block text-[rgb(var(--fg))]">Visual Arts</span>
             </h1>
-            <p className="mt-6 max-w-xl text-base font-light leading-relaxed text-neutral-300 md:text-lg">
-              Deadpixel is a photography studio shooting in low light, hard shadow and colour that
-              refuses to sit still. We look for the frame most people walk past, then make it
-              impossible to ignore.
+            <p className="mt-6 max-w-xl text-base font-light leading-relaxed text-[rgb(var(--tx))] md:text-lg">
+              Deadpixel is a photography studio shooting in low light, hard
+              shadow and colour that refuses to sit still. We look for the frame
+              most people walk past, then make it impossible to ignore.
             </p>
-            <p className="mt-4 text-xs tracking-[0.2em] text-neutral-500">Now showing: {SLIDES[slide].caption}</p>
+            <p className="mt-4 text-xs tracking-[0.2em] text-[rgb(var(--mu))]">
+              Now showing: {SLIDES[slide].caption}
+            </p>
           </div>
 
           {/* Right pagination */}
@@ -291,27 +481,37 @@ export default function Page() {
                 aria-label={`Slide ${i + 1}`}
                 aria-current={i === slide}
                 className={`display flex items-center gap-3 text-sm font-bold transition-all ${
-                  i === slide ? "text-[#A855F7]" : "text-neutral-600 hover:text-neutral-300"
+                  i === slide
+                    ? "text-[rgb(var(--ac))]"
+                    : "text-[rgb(var(--dm))] hover:text-[rgb(var(--fg))]"
                 }`}
               >
-                <span className={`h-px transition-all ${i === slide ? "w-8 bg-[#A855F7]" : "w-3 bg-neutral-600"}`} />
+                <span
+                  className={`h-px transition-all ${
+                    i === slide
+                      ? "w-8 bg-[rgb(var(--ac))]"
+                      : "w-3 bg-[rgb(var(--dm))]"
+                  }`}
+                />
                 {String(i + 1).padStart(2, "0")}
               </button>
             ))}
           </div>
 
           {/* Highlights */}
-          <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-white/10 bg-white/10 md:grid-cols-3">
+          <div className="mt-12 grid gap-px overflow-hidden rounded-xl border border-[rgb(var(--fg)/0.12)] bg-[rgb(var(--fg)/0.12)] md:grid-cols-3">
             {HIGHLIGHTS.map((h) => (
               <div
                 key={h.title}
-                className="group bg-[#0A0A0C]/75 p-6 backdrop-blur-md transition-colors hover:bg-[#121214]"
+                className="group bg-[rgb(var(--bg)/0.75)] p-6 backdrop-blur-md transition-colors hover:bg-[rgb(var(--bg2))]"
               >
-                <h3 className="display text-lg font-bold uppercase text-white">{h.title}</h3>
-                <p className="mt-2 text-sm text-neutral-400">{h.text}</p>
+                <h3 className="display text-lg font-bold uppercase text-[rgb(var(--fg))]">
+                  {h.title}
+                </h3>
+                <p className="mt-2 text-sm text-[rgb(var(--mu))]">{h.text}</p>
                 <button
                   onClick={() => nav("galleries")}
-                  className="mt-4 text-xs font-semibold tracking-[0.18em] text-[#A855F7] transition-all group-hover:tracking-[0.26em]"
+                  className="mt-4 text-xs font-semibold tracking-[0.18em] text-[rgb(var(--ac))] transition-all group-hover:tracking-[0.26em]"
                 >
                   VIEW GALLERY →
                 </button>
@@ -322,39 +522,104 @@ export default function Page() {
       </section>
 
       {/* ABOUT */}
-      <section id="about" className="mx-auto grid max-w-7xl gap-10 px-5 py-24 md:grid-cols-2 md:gap-16 md:px-8 md:py-32">
-        <h2 className="display text-4xl font-extrabold uppercase leading-tight text-white md:text-5xl">
-          Light is the only <span className="text-[#A855F7]">subject</span>
+      <section
+        id="about"
+        className="mx-auto grid max-w-7xl gap-10 px-5 py-24 md:grid-cols-2 md:gap-16 md:px-8 md:py-32"
+      >
+        <h2 className="display text-4xl font-extrabold uppercase leading-tight text-[rgb(var(--fg))] md:text-5xl">
+          Light is the only{" "}
+          <span className="text-[rgb(var(--ac))]">subject</span>
         </h2>
         <div className="space-y-5 text-base font-light leading-relaxed">
           <p>
-            Deadpixel started with a single stuck pixel on a first camera and a decision to treat
-            flaws as style. Today the work spans street, portrait, landscape and commercial
-            projects across Indonesia and beyond.
+            Deadpixel started with a single stuck pixel on a first camera and a
+            decision to treat flaws as style. Today the work spans street,
+            portrait, landscape and commercial projects across Indonesia and
+            beyond.
           </p>
           <p>
-            Every shoot is built around available light, a small kit and a lot of patience. The
-            result is imagery that feels lived in, not staged.
+            Every shoot is built around available light, a small kit and a lot
+            of patience. The result is imagery that feels lived in, not staged.
           </p>
         </div>
       </section>
+      {/* GEAR */}
+      <section id="gear" className="py-20 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
+          {/* HEADER */}
+          <div className="mb-12">
+            <p className="text-[10px] font-semibold tracking-[0.3em] text-[rgb(var(--ac))]">
+              THE TOOLS
+            </p>
 
+            <h2 className="display mt-2 text-4xl font-extrabold uppercase tracking-tight text-[rgb(var(--fg))] md:text-5xl">
+              MY <span className="text-[rgb(var(--ac))]">GEAR</span>
+            </h2>
+
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-[rgb(var(--mu))]">
+              The gear I use to capture moments, from everyday scenes to bigger
+              stories.
+            </p>
+          </div>
+
+          {/* GEAR */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
+            {GEAR.map((gear) => (
+              <article key={gear.name} className="group">
+                {/* IMAGE BOX */}
+                <div className="aspect-square overflow-hidden rounded-2xl bg-[#151517]">
+                  <img
+                    src={gear.image}
+                    alt={`${gear.brand} ${gear.name}`}
+                    loading="lazy"
+                    className="h-full w-full object-contain p-5 transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+
+                {/* TEXT */}
+                <div className="mt-4">
+                  <p className="text-[9px] font-medium tracking-[0.2em] text-[rgb(var(--dm))]">
+                    {gear.brand}
+                  </p>
+
+                  <h3 className="mt-1 text-base font-medium text-[rgb(var(--fg))]">
+                    {gear.name}
+                  </h3>
+
+                  <span className="mt-3 block text-sm text-[rgb(var(--ac))] transition-transform duration-300 group-hover:translate-x-1">
+                    →
+                  </span>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
       {/* FEATURED GALLERIES */}
-      <section id="galleries" className="bg-[#121214] py-24 md:py-32">
+      <section
+        id="galleries"
+        className="bg-[rgb(var(--bg2))] py-24 transition-colors duration-300 md:py-32"
+      >
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div className="flex items-end justify-between gap-6">
             <div>
-              <p className="text-xs font-semibold tracking-[0.3em] text-neutral-500">PLAYER 1</p>
-              <h2 className="display mt-2 text-4xl font-extrabold uppercase text-[#A855F7] md:text-5xl">
+              <p className="text-xs font-semibold tracking-[0.3em] text-[rgb(var(--dm))]">
+                PLAYER 1
+              </p>
+              <h2 className="display mt-2 text-4xl font-extrabold uppercase text-[rgb(var(--ac))] md:text-5xl">
                 Select Gallery
               </h2>
-              <p className="mt-3 max-w-md text-neutral-400">
-                Arahkan kursor atau tap untuk memilih, lalu klik kartu terpilih untuk masuk.
+              <p className="mt-3 max-w-md text-[rgb(var(--mu))]">
+                Arahkan kursor atau tap untuk memilih, lalu klik kartu terpilih
+                untuk masuk.
               </p>
             </div>
-            <p className="display hidden text-5xl font-extrabold text-white/10 sm:block md:text-7xl">
+            <p className="display hidden text-5xl font-extrabold text-[rgb(var(--fg)/0.1)] sm:block md:text-7xl">
               {String(sel + 1).padStart(2, "0")}
-              <span className="text-2xl md:text-3xl"> / {String(GALLERIES.length).padStart(2, "0")}</span>
+              <span className="text-2xl md:text-3xl">
+                {" "}
+                / {String(GALLERIES.length).padStart(2, "0")}
+              </span>
             </p>
           </div>
 
@@ -362,8 +627,10 @@ export default function Page() {
           <div
             className="mt-14 grid grid-cols-2 gap-3 lg:flex lg:h-[600px] lg:items-center lg:justify-center lg:gap-4"
             onKeyDown={(e) => {
-              if (e.key === "ArrowRight") setSel((s) => (s + 1) % GALLERIES.length);
-              if (e.key === "ArrowLeft") setSel((s) => (s - 1 + GALLERIES.length) % GALLERIES.length);
+              if (e.key === "ArrowRight")
+                setSel((s) => (s + 1) % GALLERIES.length);
+              if (e.key === "ArrowLeft")
+                setSel((s) => (s - 1 + GALLERIES.length) % GALLERIES.length);
             }}
           >
             {GALLERIES.map((g, i) => {
@@ -376,12 +643,14 @@ export default function Page() {
                   onPointerEnter={(e) => e.pointerType === "mouse" && setSel(i)}
                   onFocus={() => setSel(i)}
                   onClick={(e) => (on ? openG(i, e.currentTarget) : setSel(i))}
-                  aria-label={on ? `Enter ${g.title} gallery` : `Select ${g.title}`}
+                  aria-label={
+                    on ? `Enter ${g.title} gallery` : `Select ${g.title}`
+                  }
                   aria-pressed={on}
                   className={`relative aspect-[4/5] overflow-hidden rounded-xl border text-left transition-all duration-700 ease-[cubic-bezier(.2,.8,.2,1)] lg:aspect-auto lg:shrink-0 ${
                     on
-                      ? "z-10 scale-[1.03] border-[#A855F7] shadow-[0_0_70px_rgba(168,85,247,.5)] lg:h-[550px] lg:w-[440px] lg:scale-100"
-                      : "border-white/10 lg:h-[400px] lg:w-[190px]"
+                      ? "z-10 scale-[1.03] border-[rgb(var(--ac))] shadow-[0_0_70px_rgba(168,85,247,.5)] lg:h-[550px] lg:w-[440px] lg:scale-100"
+                      : "border-[rgb(var(--fg)/0.12)] lg:h-[400px] lg:w-[190px]"
                   }`}
                 >
                   <img
@@ -389,7 +658,9 @@ export default function Page() {
                     alt={g.title}
                     loading="lazy"
                     className={`h-full w-full object-cover transition-all duration-700 ${
-                      on ? "scale-105 brightness-100 grayscale-0" : "scale-100 brightness-50 grayscale"
+                      on
+                        ? "scale-105 brightness-100 grayscale-0"
+                        : "scale-100 brightness-50 grayscale"
                     }`}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
@@ -423,7 +694,9 @@ export default function Page() {
                   {/* badge */}
                   <span
                     className={`absolute left-6 top-6 rounded-sm bg-[#A855F7] px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-[#0A0A0C] transition-all duration-500 ${
-                      on ? "translate-y-0 opacity-100 delay-300" : "-translate-y-1 opacity-0"
+                      on
+                        ? "translate-y-0 opacity-100 delay-300"
+                        : "-translate-y-1 opacity-0"
                     }`}
                   >
                     P1 SELECTED
@@ -442,7 +715,9 @@ export default function Page() {
                   <h3
                     aria-hidden
                     className={`display pointer-events-none absolute bottom-6 left-1/2 hidden -translate-x-1/2 rotate-180 text-lg font-bold uppercase tracking-[0.15em] text-white/80 transition-opacity [writing-mode:vertical-rl] lg:block ${
-                      on ? "opacity-0 duration-200" : "opacity-100 delay-300 duration-500"
+                      on
+                        ? "opacity-0 duration-200"
+                        : "opacity-100 delay-300 duration-500"
                     }`}
                   >
                     {g.title}
@@ -462,12 +737,16 @@ export default function Page() {
 
                     <div
                       className={`mt-3 transition-all duration-500 ${
-                        on ? "translate-y-0 opacity-100 delay-500" : "hidden translate-y-2 opacity-0 lg:block"
+                        on
+                          ? "translate-y-0 opacity-100 delay-500"
+                          : "hidden translate-y-2 opacity-0 lg:block"
                       }`}
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-[10px] font-semibold tracking-[0.2em] text-neutral-400">FRAMES</span>
-                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/15">
+                        <span className="text-[10px] font-semibold tracking-[0.2em] text-neutral-300">
+                          FRAMES
+                        </span>
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/20">
                           {on && (
                             <div
                               key={`bar-${i}`}
@@ -476,9 +755,13 @@ export default function Page() {
                             />
                           )}
                         </div>
-                        <span className="text-xs font-bold text-[#A855F7]">{frames}</span>
+                        <span className="text-xs font-bold text-[#C084FC]">
+                          {frames}
+                        </span>
                       </div>
-                      <p className="dp-pulse mt-4 text-xs font-semibold tracking-[0.22em] text-white">▶ PRESS TO ENTER</p>
+                      <p className="dp-pulse mt-4 text-xs font-semibold tracking-[0.22em] text-white">
+                        ▶ PRESS TO ENTER
+                      </p>
                     </div>
                   </div>
                 </button>
@@ -496,20 +779,20 @@ export default function Page() {
           aria-hidden
           className="absolute inset-0 h-full w-full object-cover opacity-20"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0C] via-[#0A0A0C]/70 to-[#0A0A0C]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[rgb(var(--bg))] via-[rgb(var(--bg)/0.7)] to-[rgb(var(--bg))]" />
 
         <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 md:px-8 lg:grid-cols-2 lg:gap-16">
           <div>
-            <h2 className="display text-5xl font-extrabold uppercase leading-[0.95] text-white md:text-7xl">
+            <h2 className="display text-5xl font-extrabold uppercase leading-[0.95] text-[rgb(var(--fg))] md:text-7xl">
               Capturing
-              <span className="block text-[#A855F7]">the unseen</span>
+              <span className="block text-[rgb(var(--ac))]">the unseen</span>
             </h2>
-            <p className="mt-6 max-w-md font-light leading-relaxed text-neutral-300">
-              Each project starts with scouting at odd hours, then hours of waiting for one
-              moment. Editing stays minimal: contrast, grain and a colour grade that keeps the
-              shadows honest.
+            <p className="mt-6 max-w-md font-light leading-relaxed text-[rgb(var(--tx))]">
+              Each project starts with scouting at odd hours, then hours of
+              waiting for one moment. Editing stays minimal: contrast, grain and
+              a colour grade that keeps the shadows honest.
             </p>
-            <button className="mt-8 rounded-full bg-[#A855F7] px-7 py-3 text-xs font-bold tracking-[0.18em] text-[#0A0A0C] transition hover:shadow-[0_0_32px_rgba(168,85,247,.55)]">
+            <button className="mt-8 rounded-full bg-[rgb(var(--ac))] px-7 py-3 text-xs font-bold tracking-[0.18em] text-[rgb(var(--on))] transition hover:shadow-[0_0_32px_rgba(168,85,247,.55)]">
               VIEW FULL PROJECT
             </button>
           </div>
@@ -518,7 +801,7 @@ export default function Page() {
             {WORKS.map((w, i) => (
               <figure
                 key={i}
-                className="group relative aspect-square overflow-hidden rounded-lg border border-white/10 transition-colors hover:border-[#A855F7]/60"
+                className="group relative aspect-square overflow-hidden rounded-lg border border-[rgb(var(--fg)/0.12)] transition-colors hover:border-[rgb(var(--ac)/0.6)]"
               >
                 <img
                   src={w.src}
@@ -526,7 +809,7 @@ export default function Page() {
                   loading="lazy"
                   className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <figcaption className="absolute inset-x-0 bottom-0 translate-y-full bg-[#0A0A0C]/90 p-2.5 text-center text-[10px] tracking-[0.1em] text-[#A855F7] backdrop-blur transition-transform duration-300 group-hover:translate-y-0 group-focus-within:translate-y-0">
+                <figcaption className="absolute inset-x-0 bottom-0 translate-y-full bg-[rgb(var(--bg)/0.9)] p-2.5 text-center text-[10px] tracking-[0.1em] text-[rgb(var(--ac))] backdrop-blur transition-transform duration-300 group-hover:translate-y-0 group-focus-within:translate-y-0">
                   {w.meta}
                 </figcaption>
               </figure>
@@ -536,16 +819,19 @@ export default function Page() {
       </section>
 
       {/* CONTACT + FOOTER */}
-      <footer id="contact" className="border-t border-white/10 px-5 py-20 text-center">
-        <h2 className="display text-3xl font-extrabold tracking-[0.3em] text-white md:text-4xl">
-          DEAD<span className="text-[#A855F7]">PIXEL</span>
+      <footer
+        id="contact"
+        className="border-t border-[rgb(var(--fg)/0.12)] px-5 py-20 text-center"
+      >
+        <h2 className="display text-3xl font-extrabold tracking-[0.3em] text-[rgb(var(--fg))] md:text-4xl">
+          DEAD<span className="text-[rgb(var(--ac))]">PIXEL</span>
         </h2>
-        <p className="mx-auto mt-4 max-w-sm text-sm text-neutral-500">
+        <p className="mx-auto mt-4 max-w-sm text-sm text-[rgb(var(--dm))]">
           Booking shoots for portraits, events and brands.
         </p>
         <a
           href="mailto:hello@deadpixel.id"
-          className="mt-6 inline-block rounded-full border border-[#A855F7] px-7 py-3 text-xs font-semibold tracking-[0.18em] text-[#A855F7] transition hover:bg-[#A855F7] hover:text-[#0A0A0C]"
+          className="mt-6 inline-block rounded-full border border-[rgb(var(--ac))] px-7 py-3 text-xs font-semibold tracking-[0.18em] text-[rgb(var(--ac))] transition hover:bg-[rgb(var(--ac))] hover:text-[rgb(var(--on))]"
         >
           GET IN TOUCH
         </a>
@@ -556,22 +842,23 @@ export default function Page() {
                 href={s.href}
                 target="_blank"
                 rel="noreferrer"
-                className="text-sm text-neutral-400 transition-colors hover:text-[#A855F7]"
+                className="text-sm text-[rgb(var(--mu))] transition-colors hover:text-[rgb(var(--ac))]"
               >
                 {s.label}
               </a>
             </li>
           ))}
         </ul>
-        <p className="mt-12 text-xs text-neutral-600">
-          © {new Date().getFullYear()} Deadpixel. All photographs are protected. All rights reserved.
+        <p className="mt-12 text-xs text-[rgb(var(--dm))]">
+          © {new Date().getFullYear()} Deadpixel. All photographs are protected.
+          All rights reserved.
         </p>
       </footer>
 
-      {/* GALLERY MODAL */}
+      {/* GALLERY MODAL — gaya slide PDF, ikut tema */}
       {active && (
         <div
-          className="fixed inset-0 z-[60] overflow-y-auto bg-[#0A0A0C] transition-[clip-path] duration-[700ms] ease-[cubic-bezier(.65,0,.35,1)]"
+          className="fixed inset-0 z-[60] overflow-y-auto bg-[rgb(var(--bg))] transition-[clip-path] duration-[700ms] ease-[cubic-bezier(.65,0,.35,1)]"
           style={{
             clipPath: modalShow
               ? `circle(150% at ${origin.x}% ${origin.y}%)`
@@ -582,47 +869,79 @@ export default function Page() {
           aria-modal="true"
           aria-label={`${active.title} gallery`}
         >
-          <div className="mx-auto max-w-6xl px-5 py-20" onClick={(e) => e.stopPropagation()}>
-            <div
-              className={`flex items-center justify-between transition-all duration-700 delay-300 ${
-                modalShow ? "translate-y-0 opacity-100" : "-translate-y-4 opacity-0"
-              }`}
+          <div
+            className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-5 pb-8 pt-28 text-[rgb(var(--fg))] md:px-10"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* blok warna aksen */}
+            <span
+              className="absolute left-[8%] top-0 h-14 w-[40%] origin-top transition-transform duration-700 delay-300 md:h-20"
+              style={{
+                background: active.accent,
+                transform: modalShow ? "scaleY(1)" : "scaleY(0)",
+              }}
+            />
+
+            <button
+              onClick={closeG}
+              aria-label="Close gallery"
+              className="absolute right-5 top-6 flex h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--fg)/0.2)] bg-[rgb(var(--bg))] text-lg text-[rgb(var(--fg))] transition hover:border-[rgb(var(--ac))] hover:text-[rgb(var(--ac))] md:right-10"
             >
-              <h3 className="display text-3xl font-extrabold uppercase text-[#A855F7] md:text-5xl">{active.title}</h3>
-              <button
-                onClick={closeG}
-                aria-label="Close gallery"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/20 text-lg text-white transition hover:border-[#A855F7] hover:text-[#A855F7]"
+              ✕
+            </button>
+
+            <div className="grid flex-1 gap-10 lg:grid-cols-[1fr_1.7fr] lg:gap-14">
+              {/* kiri: judul + kutipan */}
+              <div
+                className={`self-start transition-all duration-700 delay-300 lg:sticky lg:top-28 lg:self-center ${
+                  modalShow
+                    ? "translate-y-0 opacity-100"
+                    : "translate-y-6 opacity-0"
+                }`}
               >
-                ✕
-              </button>
+                <h3 className="mont text-5xl font-extrabold md:text-6xl lg:text-7xl">
+                  {active.heading}
+                </h3>
+                <p className="mt-8 max-w-sm text-base leading-relaxed text-[rgb(var(--tx))]">
+                  “{active.quote}”
+                </p>
+              </div>
+
+              {/* kanan: kolase */}
+              <div className="grid auto-rows-[120px] grid-flow-dense grid-cols-3 gap-3 sm:auto-rows-[150px] md:auto-rows-[170px] md:gap-4 lg:grid-cols-4">
+                {active.photos.map((p, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setLb(i)}
+                    aria-label={`Buka ${active.title} ${i + 1} fullscreen`}
+                    style={{
+                      transitionDelay: modalShow ? `${350 + i * 80}ms` : "0ms",
+                    }}
+                    className={`group cursor-zoom-in overflow-hidden bg-[rgb(var(--fg)/0.08)] transition-all duration-700 ${
+                      COLLAGE[i % COLLAGE.length]
+                    } ${modalShow ? "translate-y-0 scale-100 opacity-100" : "translate-y-8 scale-95 opacity-0"}`}
+                  >
+                    <img
+                      src={p}
+                      alt={`${active.title} ${i + 1}`}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="mt-8 columns-2 gap-4 md:columns-3">
-              {active.photos.map((p, i) => (
-                <button
-                  key={i}
-                  onClick={() => setLb(i)}
-                  aria-label={`Buka ${active.title} ${i + 1} fullscreen`}
-                  style={{ transitionDelay: modalShow ? `${350 + i * 80}ms` : "0ms" }}
-                  className={`group mb-4 block w-full cursor-zoom-in overflow-hidden rounded-lg border border-white/10 transition-all duration-700 hover:border-[#A855F7]/60 ${
-                    modalShow ? "translate-y-0 scale-100 opacity-100" : "translate-y-8 scale-95 opacity-0"
-                  }`}
-                >
-                  <img
-                    src={p}
-                    alt={`${active.title} ${i + 1}`}
-                    loading="lazy"
-                    className="w-full transition-transform duration-700 group-hover:scale-105"
-                  />
-                </button>
-              ))}
+            {/* footer ala slide */}
+            <div className="mt-14 flex items-center justify-between text-sm">
+              <span className="font-bold">Deadpixel.id</span>
+              <span className="text-[rgb(var(--tx))]">@deadpixel.id</span>
             </div>
           </div>
         </div>
       )}
 
-      {/* LIGHTBOX */}
+      {/* LIGHTBOX (selalu gelap supaya foto enak dilihat) */}
       {active &&
         lb !== null &&
         (() => {
@@ -646,7 +965,9 @@ export default function Page() {
               {/* top bar */}
               <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 md:p-8">
                 <p className="display text-sm font-bold tracking-[0.2em] text-white/70">
-                  <span className="text-[#A855F7]">{String(lb + 1).padStart(2, "0")}</span>
+                  <span className="text-[#A855F7]">
+                    {String(lb + 1).padStart(2, "0")}
+                  </span>
                   <span> / {String(n).padStart(2, "0")}</span>
                   <span className="ml-4 hidden text-xs font-medium tracking-[0.18em] text-white/40 sm:inline">
                     {active.title}
