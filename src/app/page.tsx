@@ -52,26 +52,32 @@ const GEAR = [
   {
     name: "Sony a6700",
     image: "/images/Gear/sony-a6700.jpg",
+    brand: "Sony",
   },
   {
     name: "Tamron 17-70mm",
     image: "/images/Gear/tamron-17-70.jpg",
+    brand: "Tamron",
   },
   {
     name: "Sony 50mm F1.4",
     image: "/images/Gear/sony-50mm.jpg",
+    brand: "Sony",
   },
   {
     name: "Takara Rover 77",
     image: "/images/Gear/takara-rover-77.jpg",
+    brand: "Takara",
   },
   {
     name: "Godox TT600",
     image: "/images/Gear/godox-TT600.jpg",
+    brand: "Godox",
   },
   {
     name: "Godox VDS-M2",
     image: "/images/Gear/godox-vds-m2.jpg",
+    brand: "Godox",
   },
 ];
 
