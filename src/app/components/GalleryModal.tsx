@@ -56,22 +56,24 @@ export default function GalleryModal({
           </div>
 
           {/* kanan: kolase */}
-          <div className="grid auto-rows-[120px] grid-flow-dense grid-cols-3 gap-3 sm:auto-rows-[150px] md:auto-rows-[170px] md:gap-4 lg:grid-cols-4">
+          {/* kanan: kolase masonry (rasio foto asli) */}
+          <div className="columns-2 gap-3 md:gap-4 lg:columns-3">
             {gallery.photos.map((p, i) => (
               <button
                 key={i}
                 onClick={() => onPhoto(i)}
                 aria-label={`Buka ${gallery.title} ${i + 1} fullscreen`}
                 style={{ transitionDelay: show ? `${350 + i * 80}ms` : "0ms" }}
-                className={`group cursor-zoom-in overflow-hidden bg-[rgb(var(--fg)/0.08)] transition-all duration-700 ${
-                  COLLAGE[i % COLLAGE.length]
-                } ${show ? "translate-y-0 scale-100 opacity-100" : "translate-y-8 scale-95 opacity-0"}`}
+                className={`group mb-3 block w-full cursor-zoom-in break-inside-avoid overflow-hidden bg-[rgb(var(--fg)/0.08)] transition-all duration-700 md:mb-4 ${
+                  show
+                    ? "translate-y-0 scale-100 opacity-100"
+                    : "translate-y-8 scale-95 opacity-0"
+                }`}
               >
                 <img
                   src={p}
                   alt={`${gallery.title} ${i + 1}`}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="h-auto w-full transition-transform duration-700 group-hover:scale-105"
                 />
               </button>
             ))}
