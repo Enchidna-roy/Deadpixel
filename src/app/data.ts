@@ -21,7 +21,10 @@ export const NAV = [
 export const SLIDES = [
   { src: img("deadpixel-hero-1", 2000, 1200), caption: "Neon rain, Magelang" },
   { src: img("deadpixel-hero-2", 2000, 1200), caption: "Golden hour portrait" },
-  { src: img("deadpixel-hero-3", 2000, 1200), caption: "Volcanic ridge at dawn" },
+  {
+    src: img("deadpixel-hero-3", 2000, 1200),
+    caption: "Volcanic ridge at dawn",
+  },
   { src: img("deadpixel-hero-4", 2000, 1200), caption: "Concrete geometry" },
 ];
 
@@ -33,11 +36,31 @@ export const HIGHLIGHTS = [
 
 export const GEAR = [
   { name: "Sony a6700", image: "/images/Gear/sony-a6700.jpg", brand: "Sony" },
-  { name: "Tamron 17-70mm", image: "/images/Gear/tamron-17-70.jpg", brand: "Tamron" },
-  { name: "Sony 50mm F1.4", image: "/images/Gear/sony-50mm.jpg", brand: "Sony" },
-  { name: "Takara Rover 77", image: "/images/Gear/takara-rover-77.jpg", brand: "Takara" },
-  { name: "Godox TT600", image: "/images/Gear/godox-TT600.jpg", brand: "Godox" },
-  { name: "Godox VDS-M2", image: "/images/Gear/godox-vds-m2.jpg", brand: "Godox" },
+  {
+    name: "Tamron 17-70mm",
+    image: "/images/Gear/tamron-17-70.jpg",
+    brand: "Tamron",
+  },
+  {
+    name: "Sony 50mm F1.4",
+    image: "/images/Gear/sony-50mm.jpg",
+    brand: "Sony",
+  },
+  {
+    name: "Takara Rover 77",
+    image: "/images/Gear/takara-rover-77.jpg",
+    brand: "Takara",
+  },
+  {
+    name: "Godox TT600",
+    image: "/images/Gear/godox-TT600.jpg",
+    brand: "Godox",
+  },
+  {
+    name: "Godox VDS-M2",
+    image: "/images/Gear/godox-vds-m2.jpg",
+    brand: "Godox",
+  },
 ];
 
 // title   -> judul kartu di "Select Gallery"
@@ -52,8 +75,8 @@ export const GALLERIES = [
     quote:
       "Kumpulan hasil jepretan dari sesi personal branding & bridal photoshoot, menonjolkan detail makeup, kain, dan pencahayaan natural.",
     count: "10 frames",
-    src: "/images/Potraits/01.jpg",
-    photos: set("dp-portrait", 10),
+    src: "/images/Potraits/01.webp",
+    photos: set("dp-portrait", 20),
   },
   {
     title: "LANDSCAPES",
@@ -61,8 +84,8 @@ export const GALLERIES = [
     quote:
       "Sebuah kumpulan karya fotografi yang menangkap keindahan alam, momen personal, dan cerita di balik setiap gambar.",
     count: "36 frames",
-    src: "/images/Landscapes/01.jpeg",
-    photos: set("dp-landscape", 9),
+    src: "/images/Landscapes/01.webp",
+    photos: set("dp-landscape", 20),
   },
   {
     title: "Street & Urban",
@@ -70,8 +93,8 @@ export const GALLERIES = [
     quote:
       "Eksplorasi visual jalanan dan pesisir, menangkap kontras cahaya dan momen yang mudah terlewat oleh mata biasa.",
     count: "52 frames",
-    src: "/images/Urban/01.jpg",
-    photos: set("dp-urban-photo", 9),
+    src: "/images/Urban/01.webp",
+    photos: set("dp-urban-photo", 20),
   },
   {
     title: "GRADUATION",
@@ -79,8 +102,8 @@ export const GALLERIES = [
     quote:
       "Hari ini bukan hanya tentang kelulusan, tetapi tentang perjalanan, perjuangan, dan orang-orang yang selalu ada di belakangnya.",
     count: "29 frames",
-    src: "/images/Graduation/01.jpg",
-    photos: set("dp-event", 9),
+    src: "/images/Graduation/01.webp",
+    photos: set("dp-event", 20),
   },
 ];
 
