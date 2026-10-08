@@ -100,12 +100,24 @@ export const GALLERIES = [
     heading: "Moments in Motion",
     quote:
       "Capturing the energy, movement, and fleeting moments that bring every event to life.",
-    count: "2 frames",
+    count: "11 frames",
     src: "/images/Event/01.webp",
-    photos: ["/images/Event/01.webp", "/images/Event/02.jpg"],
+    photos: [
+      "/images/Event/01.webp",
+      "/images/Event/02.jpg",
+      "/images/Event/03.jpg",
+      "/images/Event/04.jpg",
+      "/images/Event/05.jpg",
+      "/images/Event/06.jpg",
+      "/images/Event/07.jpg",
+      "/images/Event/08.jpg",
+      "/images/Event/09.png",
+      "/images/Event/10.jpg",
+      "/images/Event/11.jpg",
+    ],
   },
   {
-    title: "Street & Urban",
+    title: "Street & Nature",
     heading: "Street Photography",
     quote:
       "Capturing the essence of urban life, from bustling streets to quiet corners, highlighting the interplay of light and shadow.",
@@ -184,8 +196,5 @@ export const SOCIALS = [
     label: "Instagram",
     href: "https://www.instagram.com/deadpixeell?utm_source=ig_web_button_share_sheet&stkn=ZDNlZDc0MzIxNw==",
   },
-  { label: "Behance", href: "https://behance.net" },
-  { label: "500px", href: "https://500px.com" },
-  { label: "Unsplash", href: "https://unsplash.com" },
   { label: "Email", href: "mailto:hello@deadpixel.id" },
 ];
