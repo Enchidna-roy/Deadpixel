@@ -1,10 +1,13 @@
-import { WORKS, img } from "../data";
+import { WORKS } from "../data";
+import Photo from "./Photo";
 
 export default function Works() {
   return (
     <section id="works" className="relative overflow-hidden py-24 md:py-32">
-      <img
-        src={img("dp-works-bg", 1800, 1200)}
+      <Photo
+        src="/images/Urban/01.webp"
+        fill
+        sizes="100vw"
         alt=""
         aria-hidden
         className="absolute inset-0 h-full w-full object-cover opacity-20"
@@ -13,7 +16,7 @@ export default function Works() {
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 md:px-8 lg:grid-cols-2 lg:gap-16">
         <div>
-          <h2 className="display text-5xl font-extrabold uppercase leading-[0.95] text-[rgb(var(--fg))] md:text-7xl">
+          <h2 className="display text-[clamp(2rem,7vw,4.5rem)] font-extrabold uppercase leading-[0.95] text-[rgb(var(--fg))]">
             Capturing
             <span className="block text-[rgb(var(--ac))]">the unseen</span>
           </h2>
@@ -33,8 +36,10 @@ export default function Works() {
               key={i}
               className="group relative aspect-square overflow-hidden rounded-lg border border-[rgb(var(--fg)/0.12)] transition-colors hover:border-[rgb(var(--ac)/0.6)]"
             >
-              <img
+              <Photo
                 src={w.src}
+                fill
+                sizes="(max-width: 639px) 44vw, (max-width: 1023px) 29vw, 190px"
                 alt={`Selected work ${i + 1}`}
                 loading="lazy"
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"

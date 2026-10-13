@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { GALLERIES } from "../data";
+import Photo from "./Photo";
 
 type Props = { onOpen: (index: number, el: HTMLElement) => void };
 
@@ -38,7 +39,7 @@ export default function GallerySelect({ onOpen }: Props) {
 
         {/* Character-select row */}
         <div
-          className="mt-14 grid grid-cols-2 gap-3 lg:flex lg:h-[600px] lg:items-center lg:justify-center lg:gap-4"
+          className="mt-10 grid grid-cols-2 gap-3 lg:h-[550px] lg:grid-cols-4 lg:items-center lg:gap-4"
           onKeyDown={(e) => {
             if (e.key === "ArrowRight")
               setSel((s) => (s + 1) % GALLERIES.length);
@@ -58,22 +59,25 @@ export default function GallerySelect({ onOpen }: Props) {
                 onClick={(e) => (on ? onOpen(i, e.currentTarget) : setSel(i))}
                 aria-label={on ? `Enter ${g.title} gallery` : `Select ${g.title}`}
                 aria-pressed={on}
-                className={`relative aspect-[4/5] overflow-hidden rounded-xl border text-left transition-all duration-700 ease-[cubic-bezier(.2,.8,.2,1)] lg:aspect-auto lg:shrink-0 ${
+                className={`dp-gallery-card relative min-w-0 aspect-[3/5] overflow-hidden rounded-xl border text-left transition-[transform,border-color] duration-300 ease-out sm:aspect-[4/5] lg:aspect-auto lg:h-[480px] ${
                   on
-                    ? "z-10 scale-[1.03] border-[rgb(var(--ac))] shadow-[0_0_70px_rgb(var(--ac)/0.5)] lg:h-[550px] lg:w-[440px] lg:scale-100"
-                    : "border-[rgb(var(--fg)/0.12)] lg:h-[400px] lg:w-[190px]"
+                    ? "z-10 border-[rgb(var(--ac))] lg:scale-105"
+                    : "border-[rgb(var(--fg)/0.12)]"
                 }`}
               >
-                <img
+                <Photo
                   src={g.src}
+                  fill
+                  sizes="(max-width: 1023px) 44vw, (max-width: 1280px) 23vw, 290px"
                   alt={g.title}
                   loading="lazy"
-                  className={`h-full w-full object-cover transition-all duration-700 ${
+                  className={`h-full w-full object-cover transition-transform duration-500 ${
                     on
-                      ? "scale-105 brightness-100 grayscale-0"
-                      : "scale-100 brightness-50 grayscale"
+                      ? "scale-105"
+                      : "scale-100"
                   }`}
                 />
+                <div className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${on ? "opacity-0" : "opacity-100"}`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
 
                 {/* scanlines */}
@@ -104,7 +108,7 @@ export default function GallerySelect({ onOpen }: Props) {
 
                 {/* badge */}
                 <span
-                  className={`absolute left-6 top-6 rounded-sm bg-[rgb(var(--ac))] px-3 py-1 text-[10px] font-bold tracking-[0.2em] text-[rgb(var(--on))] transition-all duration-500 ${
+                  className={`absolute left-3 top-5 rounded-sm bg-[rgb(var(--ac))] px-2 py-1 text-[8px] font-bold tracking-[0.08em] text-[rgb(var(--on))] transition-[transform,opacity] duration-300 sm:left-6 sm:px-3 sm:text-[10px] ${
                     on
                       ? "translate-y-0 opacity-100 delay-300"
                       : "-translate-y-1 opacity-0"
@@ -115,7 +119,7 @@ export default function GallerySelect({ onOpen }: Props) {
 
                 {/* index number */}
                 <span
-                  className={`display absolute right-6 top-5 text-3xl font-extrabold text-white transition-opacity duration-500 ${
+                  className={`display absolute right-3 top-5 text-xl font-extrabold text-white transition-opacity duration-300 sm:right-6 sm:text-3xl ${
                     on ? "opacity-80" : "opacity-30"
                   }`}
                 >
@@ -135,9 +139,9 @@ export default function GallerySelect({ onOpen }: Props) {
                 </h3>
 
                 {/* name plate */}
-                <div className="absolute inset-x-0 bottom-0 p-6">
+                <div className="absolute inset-x-0 bottom-0 p-3 sm:p-6">
                   <h3
-                    className={`display text-lg font-bold uppercase leading-tight text-white transition-opacity lg:text-3xl ${
+                    className={`display break-words text-sm font-bold uppercase leading-tight text-white transition-opacity sm:text-lg lg:text-2xl ${
                       on
                         ? "opacity-100 delay-300 duration-500"
                         : "opacity-100 duration-300 lg:opacity-0 lg:duration-200"
@@ -147,13 +151,13 @@ export default function GallerySelect({ onOpen }: Props) {
                   </h3>
 
                   <div
-                    className={`mt-3 transition-all duration-500 ${
+                    className={`mt-3 transition-[transform,opacity] duration-300 ${
                       on
                         ? "translate-y-0 opacity-100 delay-500"
                         : "hidden translate-y-2 opacity-0 lg:block"
                     }`}
                   >
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2">
                       <span className="text-[10px] font-semibold tracking-[0.2em] text-neutral-300">
                         FRAMES
                       </span>
@@ -170,7 +174,7 @@ export default function GallerySelect({ onOpen }: Props) {
                         {frames}
                       </span>
                     </div>
-                    <p className="dp-pulse mt-4 text-xs font-semibold tracking-[0.22em] text-white">
+                    <p className="mt-3 text-[9px] font-semibold tracking-[0.08em] text-white sm:text-xs sm:tracking-[0.18em]">
                       ▶ PRESS TO ENTER
                     </p>
                   </div>

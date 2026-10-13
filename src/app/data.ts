@@ -1,14 +1,5 @@
 /* Semua data konten ada di sini. Ganti foto / teks cukup di file ini. */
 
-export const img = (seed: string, w = 1200, h = 800) =>
-  `https://picsum.photos/seed/${seed}/${w}/${h}`;
-
-// Placeholder set of n photos for a gallery (varied heights for the collage look).
-export const set = (seed: string, n: number) =>
-  Array.from({ length: n }, (_, i) =>
-    img(`${seed}-${i + 1}`, 900, i % 3 === 0 ? 1200 : 900),
-  );
-
 export const NAV = [
   { label: "HOME", id: "home" },
   { label: "ABOUT", id: "about" },
@@ -19,13 +10,13 @@ export const NAV = [
 ];
 
 export const SLIDES = [
-  { src: img("deadpixel-hero-1", 2000, 1200), caption: "Neon rain, Magelang" },
-  { src: img("deadpixel-hero-2", 2000, 1200), caption: "Golden hour portrait" },
+  { src: "/images/Urban/01.webp", caption: "Street & Nature" },
+  { src: "/images/Potraits/01.webp", caption: "Portraits in Perspective" },
   {
-    src: img("deadpixel-hero-3", 2000, 1200),
-    caption: "Volcanic ridge at dawn",
+    src: "/images/Graduation/01.webp",
+    caption: "A Moment to Remember",
   },
-  { src: img("deadpixel-hero-4", 2000, 1200), caption: "Concrete geometry" },
+  { src: "/images/Event/01.webp", caption: "Moments in Motion" },
 ];
 
 export const HIGHLIGHTS = [
@@ -172,23 +163,13 @@ export const GALLERIES = [
 
 export type Gallery = (typeof GALLERIES)[number];
 
-// Pola ukuran kolase (berulang tiap 6 foto). Ubah sesuka hati.
-export const COLLAGE = [
-  "col-span-2 row-span-2",
-  "col-span-1 row-span-1",
-  "col-span-1 row-span-2",
-  "col-span-1 row-span-1",
-  "col-span-2 row-span-1",
-  "col-span-1 row-span-2",
-];
-
 export const WORKS = [
-  { src: img("dp-work-1", 700, 700), meta: "35mm | f/1.8 | 1/1000s | ISO 100" },
-  { src: img("dp-work-2", 700, 700), meta: "50mm | f/1.4 | 1/500s | ISO 200" },
-  { src: img("dp-work-3", 700, 700), meta: "24mm | f/8 | 1/250s | ISO 100" },
-  { src: img("dp-work-4", 700, 700), meta: "85mm | f/2.0 | 1/640s | ISO 160" },
-  { src: img("dp-work-5", 700, 700), meta: "28mm | f/2.8 | 1/60s | ISO 800" },
-  { src: img("dp-work-6", 700, 700), meta: "70mm | f/4 | 1/800s | ISO 100" },
+  { src: "/images/work-01.jpg", meta: "Selected work 01" },
+  { src: "/images/work-02.jpg", meta: "Selected work 02" },
+  { src: "/images/Urban/02.jpg", meta: "Street & Nature" },
+  { src: "/images/Potraits/02.jpg", meta: "Portraits in Perspective" },
+  { src: "/images/Event/02.jpg", meta: "Moments in Motion" },
+  { src: "/images/Graduation/02.jpg", meta: "A Moment to Remember" },
 ];
 
 export const SOCIALS = [

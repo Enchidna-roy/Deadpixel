@@ -1,4 +1,5 @@
 import { GEAR } from "../data";
+import Photo from "./Photo";
 
 export default function GearGrid() {
   return (
@@ -22,9 +23,11 @@ export default function GearGrid() {
         <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:grid-cols-6">
           {GEAR.map((gear) => (
             <article key={gear.name} className="group">
-              <div className="aspect-square overflow-hidden rounded-2xl bg-[#151517]">
-                <img
+              <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#151517]">
+                <Photo
                   src={gear.image}
+                  fill
+                  sizes="(max-width: 639px) 44vw, (max-width: 1023px) 29vw, 190px"
                   alt={`${gear.brand} ${gear.name}`}
                   loading="lazy"
                   className="h-full w-full object-contain p-5 transition-transform duration-500 group-hover:scale-105"

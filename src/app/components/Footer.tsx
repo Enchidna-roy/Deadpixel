@@ -6,7 +6,7 @@ export default function Footer() {
       id="contact"
       className="border-t border-[rgb(var(--fg)/0.12)] px-5 py-20 text-center"
     >
-      <h2 className="display text-3xl font-extrabold tracking-[0.3em] text-[rgb(var(--fg))] md:text-4xl">
+      <h2 className="display text-[clamp(1.5rem,7vw,2.25rem)] font-extrabold tracking-[0.15em] text-[rgb(var(--fg))] sm:tracking-[0.3em]">
         DEAD<span className="text-[rgb(var(--ac))]">PIXEL</span>
       </h2>
       <p className="mx-auto mt-4 max-w-sm text-sm text-[rgb(var(--dm))]">

@@ -46,7 +46,7 @@ export default function Navbar({ isDark, onToggleTheme }: Props) {
               className="group relative text-xs font-medium tracking-[0.18em] text-[rgb(var(--mu))] transition-colors hover:text-[rgb(var(--ac))]"
             >
               {n.label}
-              <span className="absolute -bottom-1.5 left-0 h-px w-0 bg-[rgb(var(--ac))] transition-all duration-300 group-hover:w-full" />
+              <span className="absolute -bottom-1.5 left-0 h-px w-full origin-left scale-x-0 bg-[rgb(var(--ac))] transition-transform duration-300 group-hover:scale-x-100" />
             </button>
           ))}
         </nav>
@@ -115,7 +115,7 @@ export default function Navbar({ isDark, onToggleTheme }: Props) {
 
       {menu && (
         <nav
-          className="flex flex-col gap-1 border-t border-[rgb(var(--fg)/0.08)] px-5 pb-6 pt-3 lg:hidden"
+          className="flex max-h-[calc(100dvh-4rem)] flex-col gap-1 overflow-y-auto overscroll-contain border-t border-[rgb(var(--fg)/0.08)] px-5 pb-6 pt-3 lg:hidden"
           aria-label="Mobile"
         >
           {NAV.map((n) => (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { GALLERIES } from "./data";
 import ThemeStyles from "./components/ThemeStyles";
 import Navbar from "./components/Navbar";
@@ -12,6 +12,8 @@ import Works from "./components/Works";
 import Footer from "./components/Footer";
 import GalleryModal from "./components/GalleryModal";
 import Lightbox from "./components/Lightbox";
+import { imageLoader } from "./lib/images";
+import { readTheme, serverTheme, subscribeTheme, toggleTheme } from "./lib/theme";
 
 /* ------------------------------------------------------------------
    DEADPIXEL — photography portfolio
@@ -20,67 +22,41 @@ import Lightbox from "./components/Lightbox";
    Data/konten: app/data.ts   |   Komponen: app/components/
 ------------------------------------------------------------------- */
 
-type Theme = "dark" | "light";
-const THEME_KEY = "dp-theme";
-
 export default function Page() {
-  const [theme, setTheme] = useState<Theme>("dark");
+  const theme = useSyncExternalStore(subscribeTheme, readTheme, serverTheme);
   const [openGallery, setOpenGallery] = useState<number | null>(null);
   const [modalShow, setModalShow] = useState(false); // drives the open/close animation
-  const [origin, setOrigin] = useState({ x: 50, y: 50 }); // reveal origin (%)
   const [lb, setLb] = useState<number | null>(null); // index foto di lightbox
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Tema: ambil pilihan tersimpan, kalau belum ada ikuti pengaturan sistem
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(THEME_KEY);
-      if (saved === "dark" || saved === "light") {
-        setTheme(saved);
-        return;
-      }
-    } catch {}
-    if (window.matchMedia("(prefers-color-scheme: light)").matches)
-      setTheme("light");
+  useEffect(() => () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
   }, []);
 
-  const toggleTheme = () => {
-    const next: Theme = theme === "dark" ? "light" : "dark";
-    setTheme(next);
-    try {
-      localStorage.setItem(THEME_KEY, next);
-    } catch {}
-  };
-
-  const clearCloseTimer = () => {
+  const clearCloseTimer = useCallback(() => {
     if (closeTimer.current) {
       clearTimeout(closeTimer.current);
       closeTimer.current = null;
     }
-  };
+  }, []);
 
-  const openG = (i: number, el: HTMLElement) => {
+  const openG = (i: number) => {
     clearCloseTimer(); // batalkan penutupan yang masih tertunda
-    const r = el.getBoundingClientRect();
-    setOrigin({
-      x: ((r.left + r.width / 2) / window.innerWidth) * 100,
-      y: ((r.top + r.height / 2) / window.innerHeight) * 100,
-    });
     setOpenGallery(i);
     requestAnimationFrame(() =>
       requestAnimationFrame(() => setModalShow(true)),
     );
   };
 
-  const closeG = () => {
+  const closeG = useCallback(() => {
     clearCloseTimer(); // cegah timer dobel (mis. Esc lalu klik cepat)
     setLb(null);
     setModalShow(false);
     closeTimer.current = setTimeout(() => {
       setOpenGallery(null);
       closeTimer.current = null;
-    }, 650); // tunggu animasi tutup
-  };
+    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 300);
+  }, [clearCloseTimer]);
 
   // Gallery modal + lightbox: keyboard + lock page scroll
   useEffect(() => {
@@ -96,21 +72,31 @@ export default function Page() {
       if (e.key === "Escape") closeG();
     };
     window.addEventListener("keydown", onKey);
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      document.body.style.overflow = previousOverflow;
     };
-  }, [openGallery, lb]);
+  }, [openGallery, lb, closeG]);
 
   // Preload foto sebelah supaya pindah foto tidak berkedip
   useEffect(() => {
     if (openGallery === null || lb === null) return;
     const ph = GALLERIES[openGallery].photos;
-    [1, -1].forEach((d) => {
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    if (connection?.saveData || ["slow-2g", "2g"].includes(connection?.effectiveType ?? "")) return;
+    // Give the current photo a head start; warm only one optimized neighbour.
+    const timer = setTimeout(() => {
       const im = new Image();
-      im.src = ph[(lb + d + ph.length) % ph.length];
-    });
+      im.decoding = "async";
+      im.fetchPriority = "low";
+      im.sizes = "(max-width: 767px) 100vw, 80vw";
+      const src = ph[(lb + 1) % ph.length];
+      im.srcset = [320, 640, 960, 1920].map((width) => `${imageLoader({ src, width })} ${width}w`).join(", ");
+      im.src = imageLoader({ src, width: 960 });
+    }, 800);
+    return () => clearTimeout(timer);
   }, [openGallery, lb]);
 
   const active = openGallery !== null ? GALLERIES[openGallery] : null;
@@ -134,7 +120,6 @@ export default function Page() {
         <GalleryModal
           gallery={active}
           show={modalShow}
-          origin={origin}
           onClose={closeG}
           onPhoto={setLb}
         />

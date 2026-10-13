@@ -1,9 +1,9 @@
-import { COLLAGE, type Gallery } from "../data";
+import { type Gallery } from "../data";
+import Photo from "./Photo";
 
 type Props = {
   gallery: Gallery;
   show: boolean; // menggerakkan animasi buka/tutup
-  origin: { x: number; y: number }; // titik awal reveal (%)
   onClose: () => void;
   onPhoto: (index: number) => void; // buka lightbox
 };
@@ -11,43 +11,37 @@ type Props = {
 export default function GalleryModal({
   gallery,
   show,
-  origin,
   onClose,
   onPhoto,
 }: Props) {
   return (
     <div
-      className="fixed inset-0 z-[60] overflow-y-auto bg-[rgb(var(--bg))] transition-[clip-path] duration-[700ms] ease-[cubic-bezier(.65,0,.35,1)]"
-      style={{
-        clipPath: show
-          ? `circle(150% at ${origin.x}% ${origin.y}%)`
-          : `circle(0% at ${origin.x}% ${origin.y}%)`,
-      }}
+      className={`dp-gallery fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-[rgb(var(--bg))] transition-opacity duration-300 ${show ? "opacity-100" : "pointer-events-none opacity-0"}`}
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label={`${gallery.title} gallery`}
     >
       <div
-        className="relative mx-auto flex min-h-screen max-w-7xl flex-col px-5 pb-8 pt-28 text-[rgb(var(--fg))] md:px-10"
+        className="relative mx-auto flex min-h-dvh w-full max-w-7xl flex-col px-4 pb-8 pt-24 text-[rgb(var(--fg))] sm:px-5 md:px-10"
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={onClose}
           aria-label="Close gallery"
-          className="absolute right-5 top-6 flex h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--fg)/0.2)] bg-[rgb(var(--bg))] text-lg text-[rgb(var(--fg))] transition hover:border-[rgb(var(--ac))] hover:text-[rgb(var(--ac))] md:right-10"
+          className="dp-gallery-close fixed right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full border border-[rgb(var(--fg)/0.2)] bg-[rgb(var(--bg))] text-lg text-[rgb(var(--fg))] transition-colors hover:border-[rgb(var(--ac))] hover:text-[rgb(var(--ac))] md:right-10"
         >
           ✕
         </button>
 
-        <div className="grid flex-1 gap-10 lg:grid-cols-[1fr_1.7fr] lg:gap-14">
+        <div className="grid min-w-0 flex-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.7fr)] lg:gap-14">
           {/* kiri: judul + kutipan */}
           <div
-            className={`self-start transition-all duration-700 delay-300 lg:sticky lg:top-28 lg:self-center ${
+            className={`min-w-0 self-start transition-[transform,opacity] duration-300 lg:sticky lg:top-28 ${
               show ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
             }`}
           >
-            <h3 className="mont text-5xl font-extrabold md:text-6xl lg:text-7xl">
+            <h3 className="mont break-words text-[clamp(2rem,8vw,3.5rem)] font-extrabold lg:text-[clamp(2rem,3.8vw,3.5rem)]">
               {gallery.heading}
             </h3>
             <p className="mt-8 max-w-sm text-base leading-relaxed text-[rgb(var(--tx))]">
@@ -57,21 +51,22 @@ export default function GalleryModal({
 
           {/* kanan: kolase */}
           {/* kanan: kolase masonry (rasio foto asli) */}
-          <div className="columns-2 gap-3 md:gap-4 lg:columns-3">
+          <div className="min-w-0 columns-2 gap-3 md:gap-4 lg:columns-3">
             {gallery.photos.map((p, i) => (
               <button
                 key={i}
                 onClick={() => onPhoto(i)}
                 aria-label={`Buka ${gallery.title} ${i + 1} fullscreen`}
-                style={{ transitionDelay: show ? `${350 + i * 80}ms` : "0ms" }}
-                className={`group mb-3 block w-full cursor-zoom-in break-inside-avoid overflow-hidden bg-[rgb(var(--fg)/0.08)] transition-all duration-700 md:mb-4 ${
+                style={{ transitionDelay: show ? `${Math.min(i, 5) * 40}ms` : "0ms" }}
+                className={`group mb-3 block w-full cursor-zoom-in break-inside-avoid overflow-hidden rounded-md bg-[rgb(var(--fg)/0.08)] transition-[transform,opacity] duration-300 md:mb-4 ${
                   show
                     ? "translate-y-0 scale-100 opacity-100"
                     : "translate-y-8 scale-95 opacity-0"
                 }`}
               >
-                <img
+                <Photo
                   src={p}
+                  sizes="(max-width: 1023px) calc((100vw - 52px) / 2), (max-width: 1280px) 18vw, 240px"
                   alt={`${gallery.title} ${i + 1}`}
                   className="h-auto w-full transition-transform duration-700 group-hover:scale-105"
                 />

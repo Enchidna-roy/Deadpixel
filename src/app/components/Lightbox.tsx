@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import type { Gallery } from "../data";
+import Photo from "./Photo";
 
 type Props = {
   gallery: Gallery;
@@ -31,7 +32,7 @@ export default function Lightbox({ gallery, index, onClose, onStep }: Props) {
       }}
     >
       {/* top bar */}
-      <div className="absolute inset-x-0 top-0 flex items-center justify-between p-5 md:p-8">
+      <div className="dp-lb-top absolute inset-x-0 top-0 z-20 flex items-center justify-between p-4 md:p-8">
         <p className="display text-sm font-bold tracking-[0.2em] text-white/70">
           <span className="text-[rgb(var(--ac))]">
             {String(index + 1).padStart(2, "0")}
@@ -60,20 +61,26 @@ export default function Lightbox({ gallery, index, onClose, onStep }: Props) {
           onStep(-1);
         }}
         aria-label="Foto sebelumnya"
-        className="absolute left-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/40 text-xl text-white backdrop-blur transition hover:border-[rgb(var(--ac))] hover:text-[rgb(var(--ac))] md:left-8"
+        className="absolute bottom-12 left-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/80 text-xl text-white transition-colors hover:border-[rgb(var(--ac))] hover:text-[rgb(var(--ac))] md:bottom-auto md:left-8 md:top-1/2 md:-translate-y-1/2"
       >
         ←
       </button>
 
       {/* image */}
-      <img
+      <div className="dp-lb-frame relative w-full" onClick={(e) => e.stopPropagation()}>
+      <Photo
         key={index}
         src={gallery.photos[index]}
+        fill
+        sizes="(max-width: 767px) 100vw, 80vw"
+        loading="eager"
+        fetchPriority="high"
         alt={`${gallery.title} ${index + 1}`}
         onClick={(e) => e.stopPropagation()}
         draggable={false}
-        className="dp-lb-img max-h-[82vh] max-w-[92vw] select-none rounded-md object-contain md:max-w-[80vw]"
+        className="dp-lb-img select-none object-contain"
       />
+      </div>
 
       {/* next */}
       <button
@@ -82,7 +89,7 @@ export default function Lightbox({ gallery, index, onClose, onStep }: Props) {
           onStep(1);
         }}
         aria-label="Foto berikutnya"
-        className="absolute right-3 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-black/40 text-xl text-white backdrop-blur transition hover:border-[rgb(var(--ac))] hover:text-[rgb(var(--ac))] md:right-8"
+        className="absolute bottom-12 right-4 z-20 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/80 text-xl text-white transition-colors hover:border-[rgb(var(--ac))] hover:text-[rgb(var(--ac))] md:bottom-auto md:right-8 md:top-1/2 md:-translate-y-1/2"
       >
         →
       </button>

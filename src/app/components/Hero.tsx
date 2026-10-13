@@ -1,26 +1,51 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Photo from "./Photo";
 import { HIGHLIGHTS, SLIDES } from "../data";
 import { go } from "../lib/scroll";
 
 export default function Hero() {
   const [slide, setSlide] = useState(0);
+  const [requested, setRequested] = useState([0]);
+  const ready = useRef(new Set<number>());
+  const section = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const t = setInterval(() => setSlide((s) => (s + 1) % SLIDES.length), 6000);
-    return () => clearInterval(t);
-  }, []);
+    let visible = true;
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    const canPlay = () => visible && !document.hidden && !motion.matches && !connection?.saveData && !["slow-2g", "2g"].includes(connection?.effectiveType ?? "");
+    const next = (slide + 1) % SLIDES.length;
+    const requestNext = () => {
+      if (canPlay()) setRequested((items) => items.includes(next) ? items : [...items, next]);
+    };
+    const observer = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; });
+    if (section.current) observer.observe(section.current);
+    const warm = setTimeout(requestNext, 3500);
+    const timer = setInterval(() => {
+      if (!canPlay()) return;
+      requestNext();
+      if (ready.current.has(next)) setSlide(next);
+    }, 6000);
+    return () => { clearTimeout(warm); clearInterval(timer); observer.disconnect(); };
+  }, [slide]);
 
   return (
     <section
       id="home"
-      className="relative flex min-h-screen flex-col justify-end overflow-hidden"
+      ref={section}
+      className="relative flex min-h-svh flex-col justify-end overflow-hidden"
     >
-      {SLIDES.map((s, i) => (
-        <img
+      {SLIDES.map((s, i) => requested.includes(i) && (
+        <Photo
           key={s.src}
           src={s.src}
+          fill
+          sizes="100vw"
+          loading="eager"
+          fetchPriority={i === 0 ? "high" : "low"}
+          onLoad={() => ready.current.add(i)}
           alt={s.caption}
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-[1400ms] ${
             i === slide ? "opacity-100" : "opacity-0"
@@ -32,7 +57,7 @@ export default function Hero() {
 
       <div className="relative mx-auto w-full max-w-7xl px-5 pb-10 pt-40 md:px-8">
         <div className="dp-in max-w-3xl">
-          <h1 className="display text-5xl font-extrabold uppercase leading-[0.95] text-[rgb(var(--ac))] drop-shadow-[0_0_30px_rgb(var(--ac)/0.25)] sm:text-7xl lg:text-8xl">
+          <h1 className="display text-[clamp(2.25rem,10vw,6rem)] font-extrabold uppercase leading-[0.95] text-[rgb(var(--ac))] drop-shadow-[0_0_30px_rgb(var(--ac)/0.25)]">
             Deadpixel
             <span className="block text-[rgb(var(--fg))]">Visual Arts</span>
           </h1>
@@ -51,20 +76,23 @@ export default function Hero() {
           {SLIDES.map((_, i) => (
             <button
               key={i}
-              onClick={() => setSlide(i)}
+              onClick={() => {
+                setRequested((items) => items.includes(i) ? items : [...items, i]);
+                setSlide(i);
+              }}
               aria-label={`Slide ${i + 1}`}
               aria-current={i === slide}
-              className={`display flex items-center gap-3 text-sm font-bold transition-all ${
+              className={`display flex items-center gap-3 text-sm font-bold transition-colors ${
                 i === slide
                   ? "text-[rgb(var(--ac))]"
                   : "text-[rgb(var(--dm))] hover:text-[rgb(var(--fg))]"
               }`}
             >
               <span
-                className={`h-px transition-all ${
+                className={`h-px w-8 origin-right transition-[transform,background-color] ${
                   i === slide
-                    ? "w-8 bg-[rgb(var(--ac))]"
-                    : "w-3 bg-[rgb(var(--dm))]"
+                    ? "scale-x-100 bg-[rgb(var(--ac))]"
+                    : "scale-x-[0.375] bg-[rgb(var(--dm))]"
                 }`}
               />
               {String(i + 1).padStart(2, "0")}
@@ -77,7 +105,7 @@ export default function Hero() {
           {HIGHLIGHTS.map((h) => (
             <div
               key={h.title}
-              className="group bg-[rgb(var(--bg)/0.75)] p-6 backdrop-blur-md transition-colors hover:bg-[rgb(var(--bg2))]"
+              className="group bg-[rgb(var(--bg)/0.9)] p-5 transition-colors hover:bg-[rgb(var(--bg2))] md:p-6"
             >
               <h3 className="display text-lg font-bold uppercase text-[rgb(var(--fg))]">
                 {h.title}
@@ -85,7 +113,7 @@ export default function Hero() {
               <p className="mt-2 text-sm text-[rgb(var(--mu))]">{h.text}</p>
               <button
                 onClick={() => go("galleries")}
-                className="mt-4 text-xs font-semibold tracking-[0.18em] text-[rgb(var(--ac))] transition-all group-hover:tracking-[0.26em]"
+                className="mt-4 text-xs font-semibold tracking-[0.18em] text-[rgb(var(--ac))] transition-transform group-hover:translate-x-1"
               >
                 VIEW GALLERY →
               </button>
