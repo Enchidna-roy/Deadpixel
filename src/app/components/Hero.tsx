@@ -56,16 +56,11 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-r from-[rgb(var(--bg)/0.8)] via-transparent to-transparent" />
 
       <div className="relative mx-auto w-full max-w-7xl px-5 pb-10 pt-40 md:px-8">
-        <div className="dp-in max-w-3xl">
-          <h1 className="display text-[clamp(2.25rem,10vw,6rem)] font-extrabold uppercase leading-[0.95] text-[rgb(var(--ac))] drop-shadow-[0_0_30px_rgb(var(--ac)/0.25)]">
-            Deadpixel
+        <div className="dp-hero-copy dp-in max-w-3xl">
+          <h1 className="dp-hero-title whitespace-nowrap font-black uppercase leading-[0.95] text-[rgb(var(--ac))] drop-shadow-[0_0_30px_rgb(var(--ac)/0.25)]">
+            <span className="block">Deadpixel</span>
             <span className="block text-[rgb(var(--fg))]">Visual Arts</span>
           </h1>
-          <p className="mt-6 max-w-xl text-base font-light leading-relaxed text-[rgb(var(--tx))] md:text-lg">
-            Deadpixel is a photography studio shooting in low light, hard shadow
-            and colour that refuses to sit still. We look for the frame most
-            people walk past, then make it impossible to ignore.
-          </p>
           <p className="mt-4 text-xs tracking-[0.2em] text-[rgb(var(--mu))]">
             Now showing: {SLIDES[slide].caption}
           </p>

@@ -34,6 +34,17 @@ html {
   overflow-wrap: break-word;
 }
 
+.dp-hero-copy {
+  container-type: inline-size;
+}
+
+.dp-hero-title {
+  font-family: var(--font-hero), "Arial Narrow", sans-serif;
+  font-size: clamp(1.5rem, 14vw, 7rem);
+  font-size: clamp(1.5rem, 16cqw, 7rem);
+  letter-spacing: -0.02em;
+}
+
 .dp-gallery {
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);

@@ -2,7 +2,6 @@
 
 export const NAV = [
   { label: "HOME", id: "home" },
-  { label: "ABOUT", id: "about" },
   { label: "GEAR", id: "gear" },
   { label: "GALLERIES", id: "galleries" },
   { label: "SELECTED WORKS", id: "works" },
@@ -24,6 +23,22 @@ export const HIGHLIGHTS = [
   { title: "Portrait & Editorial", text: "Honest faces, cinematic light." },
   { title: "Landscape & Nature", text: "Quiet horizons and raw terrain." },
 ];
+
+export const PROFILE = {
+  label: "BEHIND THE LENS",
+  name: "Muhammad Wildan Roikhan",
+  role: "Photographer & visual storyteller",
+  bio: "21 year old photographer and videographer 🎥 based in Magelang, ID documenting life, places, and moments through my lens.",
+  photo: {
+    src: "/images/Profile/1000117154.jpg",
+    alt: "Foto profil",
+    position: "center",
+  },
+  contact: {
+    label: "Let's create something",
+    href: "mailto:wildan@gmail.com",
+  },
+};
 
 export const GEAR = [
   { name: "Sony a6700", image: "/images/Gear/sony-a6700.jpg", brand: "Sony" },

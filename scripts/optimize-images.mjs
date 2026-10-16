@@ -21,7 +21,6 @@ async function scan(directory) {
     if (!/\.(jpe?g|png|webp)$/i.test(entry.name)) continue;
     const input = await readFile(file);
     originalBytes += input.length;
-    // Content hashes invalidate cached derivatives when a source photo changes.
     const hash = createHash("sha256").update(input).update("webp-75-v1").digest("hex").slice(0, 16);
     const image = sharp(input).rotate();
     const metadata = await image.metadata();

@@ -5,7 +5,7 @@ import { GALLERIES } from "./data";
 import ThemeStyles from "./components/ThemeStyles";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
-import About from "./components/About";
+import Profile from "./components/Profile";
 import GearGrid from "./components/GearGrid";
 import GallerySelect from "./components/GallerySelect";
 import Works from "./components/Works";
@@ -110,7 +110,7 @@ export default function Page() {
 
       <Navbar isDark={theme === "dark"} onToggleTheme={toggleTheme} />
       <Hero />
-      <About />
+      <Profile />
       <GearGrid />
       <GallerySelect onOpen={openG} />
       <Works />

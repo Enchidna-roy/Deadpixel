@@ -35,22 +35,23 @@ export default function GalleryModal({
         </button>
 
         <div className="grid min-w-0 flex-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.7fr)] lg:gap-14">
-          {/* kiri: judul + kutipan */}
-          <div
-            className={`min-w-0 self-start transition-[transform,opacity] duration-300 lg:sticky lg:top-28 ${
-              show ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-            }`}
-          >
-            <h3 className="mont break-words text-[clamp(2rem,8vw,3.5rem)] font-extrabold lg:text-[clamp(2rem,3.8vw,3.5rem)]">
-              {gallery.heading}
-            </h3>
-            <p className="mt-8 max-w-sm text-base leading-relaxed text-[rgb(var(--tx))]">
-              “{gallery.quote}”
-            </p>
+          {/* Teks di kiri, sejajar dengan tengah layar pada desktop. */}
+          <div className="min-w-0 self-start lg:sticky lg:top-24 lg:flex lg:h-[calc(100dvh-12rem)] lg:min-h-min lg:items-center">
+            <div
+              className={`w-full min-w-0 text-left transition-[transform,opacity] duration-300 ${
+                show ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+              }`}
+            >
+              <h3 className="mont break-words text-[clamp(2rem,8vw,3.5rem)] font-extrabold lg:text-[clamp(2rem,3.8vw,3.5rem)]">
+                {gallery.heading}
+              </h3>
+              <p className="mt-6 max-w-sm text-base leading-relaxed text-[rgb(var(--tx))]">
+                “{gallery.quote}”
+              </p>
+            </div>
           </div>
 
-          {/* kanan: kolase */}
-          {/* kanan: kolase masonry (rasio foto asli) */}
+          {/* Kolase masonry dengan rasio foto asli. */}
           <div className="min-w-0 columns-2 gap-3 md:gap-4 lg:columns-3">
             {gallery.photos.map((p, i) => (
               <button
@@ -66,13 +67,14 @@ export default function GalleryModal({
               >
                 <Photo
                   src={p}
-                  sizes="(max-width: 1023px) calc((100vw - 52px) / 2), (max-width: 1280px) 18vw, 240px"
+                  sizes="(max-width: 639px) calc((100vw - 44px) / 2), (max-width: 767px) calc((100vw - 52px) / 2), (max-width: 1023px) calc((100vw - 96px) / 2), (max-width: 1279px) 18vw, 240px"
                   alt={`${gallery.title} ${i + 1}`}
                   className="h-auto w-full transition-transform duration-700 group-hover:scale-105"
                 />
               </button>
             ))}
           </div>
+
         </div>
 
         {/* footer ala slide */}
