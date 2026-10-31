@@ -27,9 +27,23 @@ export default function ThemeStyles() {
           color-scheme: light;
         }
 
+        @font-face {
+          font-family: 'Futura';
+          src: url('/fonts/futura.woff2') format('woff2'),
+               url('/fonts/futura.otf') format('opentype'),
+               url('/fonts/futura.ttf') format('truetype'),
+               local('Futura'),
+               local('Futura PT'),
+               local('Futura Bold'),
+               local('Futura-Bold');
+          font-display: swap;
+        }
+
         .dp { font-family: var(--font-inter), system-ui, sans-serif; }
         .dp .display { font-family: var(--font-syne), var(--font-inter), sans-serif; letter-spacing: -0.02em; }
         .dp .mont { font-family: var(--font-montserrat), var(--font-inter), sans-serif; letter-spacing: -0.04em; line-height: .95; }
+        .dp .poppins { font-family: var(--font-poppins), sans-serif; }
+        .dp .futura { font-family: 'Futura', 'Futura PT', 'Futura Bold', 'Century Gothic', sans-serif; letter-spacing: -0.01em; }
         .dp :focus-visible { outline: 2px solid rgb(var(--ac)); outline-offset: 3px; }
         @keyframes dp-in { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: none; } }
         .dp-in { animation: dp-in .9s cubic-bezier(.2,.7,.2,1) both; }

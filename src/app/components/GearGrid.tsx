@@ -10,7 +10,7 @@ export default function GearGrid() {
             THE TOOLS
           </p>
 
-          <h2 className="display mt-2 text-4xl font-extrabold uppercase tracking-tight text-[rgb(var(--fg))] md:text-5xl">
+          <h2 className="poppins mt-2 text-4xl font-extrabold uppercase tracking-tight text-[rgb(var(--fg))] md:text-5xl">
             MY <span className="text-[rgb(var(--ac))]">GEAR</span>
           </h2>
 

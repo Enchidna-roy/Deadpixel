@@ -17,16 +17,9 @@ export default function GallerySelect({ onOpen }: Props) {
       <div className="mx-auto max-w-7xl px-5 md:px-8">
         <div className="flex items-end justify-between gap-6">
           <div>
-            <p className="text-xs font-semibold tracking-[0.3em] text-[rgb(var(--dm))]">
-              PLAYER 1
-            </p>
-            <h2 className="display mt-2 text-4xl font-extrabold uppercase text-[rgb(var(--ac))] md:text-5xl">
+            <h2 className="futura text-4xl font-extrabold uppercase text-[rgb(var(--ac))] md:text-5xl">
               Select Gallery
             </h2>
-            <p className="mt-3 max-w-md text-[rgb(var(--mu))]">
-              Arahkan kursor atau tap untuk memilih, lalu klik kartu terpilih
-              untuk masuk.
-            </p>
           </div>
           <p className="display hidden text-5xl font-extrabold text-[rgb(var(--fg)/0.1)] sm:block md:text-7xl">
             {String(sel + 1).padStart(2, "0")}

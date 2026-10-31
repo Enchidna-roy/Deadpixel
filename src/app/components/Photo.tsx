@@ -3,7 +3,10 @@
 import Image, { type ImageProps } from "next/image";
 import { imageLoader, photos } from "../lib/images";
 
-type Props = Omit<ImageProps, "src" | "loader" | "placeholder" | "blurDataURL"> & {
+type Props = Omit<
+  ImageProps,
+  "src" | "loader" | "placeholder" | "blurDataURL"
+> & {
   src: string;
   sizes: string;
 };

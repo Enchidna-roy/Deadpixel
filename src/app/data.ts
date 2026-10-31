@@ -10,9 +10,9 @@ export const NAV = [
 
 export const SLIDES = [
   { src: "/images/Urban/01.webp", caption: "Street & Nature" },
-  { src: "/images/Potraits/01.webp", caption: "Portraits in Perspective" },
+  { src: "/images/Potraits/06.jpg", caption: "Portraits in Perspective" },
   {
-    src: "/images/Graduation/01.webp",
+    src: "/images/Graduation/32.jpg",
     caption: "A Moment to Remember",
   },
   { src: "/images/Event/01.webp", caption: "Moments in Motion" },
@@ -26,7 +26,7 @@ export const HIGHLIGHTS = [
 
 export const PROFILE = {
   label: "BEHIND THE LENS",
-  name: "Muhammad Wildan Roikhan",
+  name: "Enchidna",
   role: "Photographer & visual storyteller",
   bio: "21 year old photographer and videographer 🎥 based in Magelang, ID documenting life, places, and moments through my lens.",
   photo: {
@@ -36,7 +36,7 @@ export const PROFILE = {
   },
   contact: {
     label: "Let's create something",
-    href: "mailto:wildan@gmail.com",
+    href: "mailto:wildanroikhan11205@gmail.com",
   },
 };
 
@@ -69,18 +69,25 @@ export const GEAR = [
   },
 ];
 
+// Grup foto - digunakan oleh galeri yang dikelompokkan (misal Graduation)
+export type PhotoGroup = {
+  name: string; // Nama klien / orang
+  photos: string[]; // Path foto dalam grup ini
+};
+
 // title   -> judul kartu di "Select Gallery"
 // heading -> judul besar di modal (gaya slide PDF)
 // quote   -> kutipan di bawah heading
 // src     -> foto cover kartu
-// photos  -> isi modal (ganti dengan foto asli, mis. ["/photos/portraits/01.jpg"])
+// photos  -> isi modal flat (untuk lightbox navigation)
+// groups  -> (opsional) pengelompokan per orang, untuk tampilan section di modal
 export const GALLERIES = [
   {
     title: "PORTRAITS",
     heading: "Portraits in Perspective",
     quote:
       "A collection of portraits exploring expression, character, and the quiet details that make every subject distinct.",
-    count: "16 frames",
+    count: "21 frames",
     src: "/images/Potraits/01.webp",
     photos: [
       "/images/Potraits/01.webp",
@@ -99,6 +106,11 @@ export const GALLERIES = [
       "/images/Potraits/14.jpg",
       "/images/Potraits/15.jpg",
       "/images/Potraits/16.jpg",
+      "/images/Potraits/17.jpg",
+      "/images/Potraits/18.jpg",
+      "/images/Potraits/19.jpg",
+      "/images/Potraits/20.jpg",
+      "/images/Potraits/21.jpg",
     ],
   },
   {
@@ -127,7 +139,7 @@ export const GALLERIES = [
     heading: "Street Photography",
     quote:
       "Capturing the essence of urban life, from bustling streets to quiet corners, highlighting the interplay of light and shadow.",
-    count: "12 frames",
+    count: "13 frames",
     src: "/images/Urban/01.webp",
     photos: [
       "/images/Urban/01.webp",
@@ -142,6 +154,7 @@ export const GALLERIES = [
       "/images/Urban/10.jpg",
       "/images/Urban/11.jpg",
       "/images/Urban/12.jpg",
+      "/images/Urban/13.jpg",
     ],
   },
   {
@@ -149,8 +162,57 @@ export const GALLERIES = [
     heading: "A Moment to Remember",
     quote:
       "Celebrating a milestone through the people, emotions, and moments that made the day unforgettable.",
-    count: "20 frames",
+    count: "32 frames",
     src: "/images/Graduation/01.webp",
+    groups: [
+      {
+        name: "Sheva",
+        photos: [
+          "/images/Graduation/01.webp",
+          "/images/Graduation/02.jpg",
+          "/images/Graduation/03.jpg",
+          "/images/Graduation/04.jpg",
+          "/images/Graduation/05.jpg",
+          "/images/Graduation/06.jpg",
+          "/images/Graduation/07.jpg",
+          "/images/Graduation/08.jpg",
+          "/images/Graduation/09.jpg",
+          "/images/Graduation/10.jpg",
+          "/images/Graduation/11.jpg",
+          "/images/Graduation/12.jpg",
+          "/images/Graduation/13.jpg",
+        ],
+      },
+      {
+        name: "Franciska",
+        photos: [
+          "/images/Graduation/14.jpg",
+          "/images/Graduation/15.jpg",
+          "/images/Graduation/16.jpg",
+          "/images/Graduation/17.jpg",
+          "/images/Graduation/18.jpg",
+          "/images/Graduation/19.jpg",
+          "/images/Graduation/20.jpg",
+        ],
+      },
+      {
+        name: "Pipit",
+        photos: [
+          "/images/Graduation/21.jpg",
+          "/images/Graduation/22.jpg",
+          "/images/Graduation/23.jpg",
+          "/images/Graduation/24.jpg",
+          "/images/Graduation/25.jpg",
+          "/images/Graduation/26.jpg",
+          "/images/Graduation/27.jpg",
+          "/images/Graduation/28.jpg",
+          "/images/Graduation/29.jpg",
+          "/images/Graduation/30.jpg",
+          "/images/Graduation/31.jpg",
+          "/images/Graduation/32.jpg",
+        ],
+      },
+    ],
     photos: [
       "/images/Graduation/01.webp",
       "/images/Graduation/02.jpg",
@@ -172,19 +234,31 @@ export const GALLERIES = [
       "/images/Graduation/18.jpg",
       "/images/Graduation/19.jpg",
       "/images/Graduation/20.jpg",
+      "/images/Graduation/21.jpg",
+      "/images/Graduation/22.jpg",
+      "/images/Graduation/23.jpg",
+      "/images/Graduation/24.jpg",
+      "/images/Graduation/25.jpg",
+      "/images/Graduation/26.jpg",
+      "/images/Graduation/27.jpg",
+      "/images/Graduation/28.jpg",
+      "/images/Graduation/29.jpg",
+      "/images/Graduation/30.jpg",
+      "/images/Graduation/31.jpg",
+      "/images/Graduation/32.jpg",
     ],
   },
 ];
 
-export type Gallery = (typeof GALLERIES)[number];
+export type Gallery = (typeof GALLERIES)[number] & { groups?: PhotoGroup[] };
 
 export const WORKS = [
-  { src: "/images/work-01.jpg", meta: "Selected work 01" },
-  { src: "/images/work-02.jpg", meta: "Selected work 02" },
-  { src: "/images/Urban/02.jpg", meta: "Street & Nature" },
-  { src: "/images/Potraits/02.jpg", meta: "Portraits in Perspective" },
-  { src: "/images/Event/02.jpg", meta: "Moments in Motion" },
-  { src: "/images/Graduation/02.jpg", meta: "A Moment to Remember" },
+  { src: "/images/Graduation/31.jpg", meta: "Selected work 01" },
+  { src: "/images/Graduation/08.jpg", meta: "Selected work 02" },
+  { src: "/images/Urban/07.jpg", meta: "Street & Nature" },
+  { src: "/images/Potraits/1.jpg", meta: "Portraits in Perspective" },
+  { src: "/images/Urban/13.jpg", meta: "Moments in Motion" },
+  { src: "/images/Graduation/25.jpg", meta: "A Moment to Remember" },
 ];
 
 export const SOCIALS = [

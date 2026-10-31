@@ -14,6 +14,17 @@ export default function GalleryModal({
   onClose,
   onPhoto,
 }: Props) {
+  // Hitung offset per grup agar klik foto membuka lightbox di index flat yang benar
+  const groups = gallery.groups;
+  const groupOffsets: number[] = [];
+  if (groups) {
+    let offset = 0;
+    for (const g of groups) {
+      groupOffsets.push(offset);
+      offset += g.photos.length;
+    }
+  }
+
   return (
     <div
       className={`dp-gallery fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-[rgb(var(--bg))] transition-opacity duration-300 ${show ? "opacity-100" : "pointer-events-none opacity-0"}`}
@@ -46,33 +57,97 @@ export default function GalleryModal({
                 {gallery.heading}
               </h3>
               <p className="mt-6 max-w-sm text-base leading-relaxed text-[rgb(var(--tx))]">
-                “{gallery.quote}”
+                &ldquo;{gallery.quote}&rdquo;
               </p>
             </div>
           </div>
 
-          {/* Kolase masonry dengan rasio foto asli. */}
-          <div className="min-w-0 columns-2 gap-3 md:gap-4 lg:columns-3">
-            {gallery.photos.map((p, i) => (
-              <button
-                key={i}
-                onClick={() => onPhoto(i)}
-                aria-label={`Buka ${gallery.title} ${i + 1} fullscreen`}
-                style={{ transitionDelay: show ? `${Math.min(i, 5) * 40}ms` : "0ms" }}
-                className={`group mb-3 block w-full cursor-zoom-in break-inside-avoid overflow-hidden rounded-md bg-[rgb(var(--fg)/0.08)] transition-[transform,opacity] duration-300 md:mb-4 ${
-                  show
-                    ? "translate-y-0 scale-100 opacity-100"
-                    : "translate-y-8 scale-95 opacity-0"
-                }`}
-              >
-                <Photo
-                  src={p}
-                  sizes="(max-width: 639px) calc((100vw - 44px) / 2), (max-width: 767px) calc((100vw - 52px) / 2), (max-width: 1023px) calc((100vw - 96px) / 2), (max-width: 1279px) 18vw, 240px"
-                  alt={`${gallery.title} ${i + 1}`}
-                  className="h-auto w-full transition-transform duration-700 group-hover:scale-105"
-                />
-              </button>
-            ))}
+          {/* Kolase foto — dengan section per grup jika ada groups */}
+          <div className="min-w-0">
+            {groups ? (
+              /* ---------- GROUPED VIEW ---------- */
+              <div className="space-y-12">
+                {groups.map((group, gi) => (
+                  <section key={gi}>
+                    {/* Section header per orang */}
+                    <div
+                      className={`mb-5 flex items-center gap-4 transition-[transform,opacity] duration-300 ${
+                        show
+                          ? "translate-y-0 opacity-100"
+                          : "translate-y-4 opacity-0"
+                      }`}
+                      style={{
+                        transitionDelay: show ? `${gi * 80}ms` : "0ms",
+                      }}
+                    >
+                      <div className="h-px flex-1 bg-[rgb(var(--fg)/0.12)]" />
+                      <h4 className="mont text-sm font-bold uppercase tracking-[0.18em] text-[rgb(var(--ac))]">
+                        {group.name}
+                      </h4>
+                      <span className="text-xs text-[rgb(var(--tx))]">
+                        {group.photos.length} frames
+                      </span>
+                      <div className="h-px flex-1 bg-[rgb(var(--fg)/0.12)]" />
+                    </div>
+
+                    {/* Masonry grid per grup */}
+                    <div className="columns-2 gap-3 md:gap-4 lg:columns-3">
+                      {group.photos.map((p, pi) => {
+                        const flatIndex = groupOffsets[gi] + pi;
+                        return (
+                          <button
+                            key={flatIndex}
+                            onClick={() => onPhoto(flatIndex)}
+                            aria-label={`Buka ${gallery.title} ${flatIndex + 1} fullscreen`}
+                            style={{
+                              transitionDelay: show
+                                ? `${gi * 80 + Math.min(pi, 5) * 40}ms`
+                                : "0ms",
+                            }}
+                            className={`group mb-3 block w-full cursor-zoom-in break-inside-avoid overflow-hidden rounded-md bg-[rgb(var(--fg)/0.08)] transition-[transform,opacity] duration-300 md:mb-4 ${
+                              show
+                                ? "translate-y-0 scale-100 opacity-100"
+                                : "translate-y-8 scale-95 opacity-0"
+                            }`}
+                          >
+                            <Photo
+                              src={p}
+                              sizes="(max-width: 639px) calc((100vw - 44px) / 2), (max-width: 767px) calc((100vw - 52px) / 2), (max-width: 1023px) calc((100vw - 96px) / 2), (max-width: 1279px) 18vw, 240px"
+                              alt={`${gallery.title} – ${group.name} ${pi + 1}`}
+                              className="h-auto w-full transition-transform duration-700 group-hover:scale-105"
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            ) : (
+              /* ---------- FLAT VIEW (galeri biasa) ---------- */
+              <div className="columns-2 gap-3 md:gap-4 lg:columns-3">
+                {gallery.photos.map((p, i) => (
+                  <button
+                    key={i}
+                    onClick={() => onPhoto(i)}
+                    aria-label={`Buka ${gallery.title} ${i + 1} fullscreen`}
+                    style={{ transitionDelay: show ? `${Math.min(i, 5) * 40}ms` : "0ms" }}
+                    className={`group mb-3 block w-full cursor-zoom-in break-inside-avoid overflow-hidden rounded-md bg-[rgb(var(--fg)/0.08)] transition-[transform,opacity] duration-300 md:mb-4 ${
+                      show
+                        ? "translate-y-0 scale-100 opacity-100"
+                        : "translate-y-8 scale-95 opacity-0"
+                    }`}
+                  >
+                    <Photo
+                      src={p}
+                      sizes="(max-width: 639px) calc((100vw - 44px) / 2), (max-width: 767px) calc((100vw - 52px) / 2), (max-width: 1023px) calc((100vw - 96px) / 2), (max-width: 1279px) 18vw, 240px"
+                      alt={`${gallery.title} ${i + 1}`}
+                      className="h-auto w-full transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
         </div>

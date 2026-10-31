@@ -36,7 +36,7 @@ export default function Profile() {
             <span className="h-px w-8 shrink-0 bg-current" aria-hidden="true" />
             {PROFILE.label}
           </p>
-          <h2 id="profile-name" className="display mt-4 break-words text-3xl font-extrabold leading-tight text-[rgb(var(--fg))] sm:text-4xl lg:text-5xl">
+          <h2 id="profile-name" className="poppins mt-3 break-words text-xl font-bold leading-tight text-[rgb(var(--fg))] sm:text-2xl lg:text-3xl">
             {PROFILE.name}
           </h2>
           <p className="mt-2 text-sm text-[rgb(var(--mu))]">{PROFILE.role}</p>

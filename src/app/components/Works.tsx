@@ -16,7 +16,7 @@ export default function Works() {
 
       <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 md:px-8 lg:grid-cols-2 lg:gap-16">
         <div>
-          <h2 className="display text-[clamp(2rem,7vw,4.5rem)] font-extrabold uppercase leading-[0.95] text-[rgb(var(--fg))]">
+          <h2 className="poppins text-[clamp(2rem,7vw,4.5rem)] font-extrabold uppercase leading-[0.95] text-[rgb(var(--fg))]">
             Capturing
             <span className="block text-[rgb(var(--ac))]">the unseen</span>
           </h2>
@@ -25,9 +25,6 @@ export default function Works() {
             waiting for one moment. Editing stays minimal: contrast, grain and a
             colour grade that keeps the shadows honest.
           </p>
-          <button className="mt-8 rounded-full bg-[rgb(var(--ac))] px-7 py-3 text-xs font-bold tracking-[0.18em] text-[rgb(var(--on))] transition hover:shadow-[0_0_32px_rgb(var(--ac)/0.55)]">
-            VIEW FULL PROJECT
-          </button>
         </div>
 
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
