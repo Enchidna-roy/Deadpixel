@@ -256,7 +256,7 @@ export const WORKS = [
   { src: "/images/Graduation/31.jpg", meta: "Selected work 01" },
   { src: "/images/Graduation/08.jpg", meta: "Selected work 02" },
   { src: "/images/Urban/07.jpg", meta: "Street & Nature" },
-  { src: "/images/Potraits/1.jpg", meta: "Portraits in Perspective" },
+  { src: "/images/Potraits/01.webp", meta: "Portraits in Perspective" },
   { src: "/images/Urban/13.jpg", meta: "Moments in Motion" },
   { src: "/images/Graduation/25.jpg", meta: "A Moment to Remember" },
 ];
